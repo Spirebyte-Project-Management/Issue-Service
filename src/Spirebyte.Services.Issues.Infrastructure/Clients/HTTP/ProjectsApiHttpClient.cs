@@ -18,6 +18,6 @@ namespace Spirebyte.Services.Issues.Infrastructure.Clients.HTTP
             _url = options.Services["projects"];
         }
 
-        public Task<bool> IsProjectUserAsync(Guid projectId, Guid userId) => _client.GetAsync<bool>($"{_url}/projects/{projectId}/hasuser/{userId}/");
+        public Task<bool> IsProjectUserAsync(string key, Guid userId) => _client.GetAsync<bool>($"{_url}/projects/{key}/hasuser/{userId}/");
     }
 }

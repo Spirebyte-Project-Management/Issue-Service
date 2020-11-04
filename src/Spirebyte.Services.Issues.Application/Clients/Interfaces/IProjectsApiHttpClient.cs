@@ -5,6 +5,6 @@ namespace Spirebyte.Services.Issues.Application.Clients.Interfaces
 {
     public interface IProjectsApiHttpClient
     {
-        Task<bool> IsProjectUserAsync(Guid projectId, Guid userId);
+        Task<bool> IsProjectUserAsync(string key, Guid userId);
     }
 }

@@ -1,28 +1,29 @@
-﻿using Convey.CQRS.Queries;
+﻿
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Spirebyte.Services.Issues.Application;
+using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.DTO;
 using Spirebyte.Services.Issues.Application.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 {
-    internal sealed class GetIssuesHandler : IQueryHandler<GetIssues, IEnumerable<IssueDto>>
+    internal sealed class GetIssueHandler : IQueryHandler<GetIssue, IssueDto>
     {
         private readonly IMongoRepository<IssueDocument, Guid> _issueRepository;
         private readonly IMongoRepository<ProjectDocument, Guid> _projectRepository;
         private readonly IAppContext _appContext;
         private readonly IProjectsApiHttpClient _projectsApiHttpClient;
 
-        public GetIssuesHandler(IMongoRepository<IssueDocument, Guid> issueRepository, IMongoRepository<ProjectDocument, Guid> projectRepository, IAppContext appContext, IProjectsApiHttpClient projectsApiHttpClient)
+        public GetIssueHandler(IMongoRepository<IssueDocument, Guid> issueRepository, IMongoRepository<ProjectDocument, Guid> projectRepository, IAppContext appContext, IProjectsApiHttpClient projectsApiHttpClient)
         {
             _issueRepository = issueRepository;
             _projectRepository = projectRepository;
@@ -30,29 +31,26 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
             _projectsApiHttpClient = projectsApiHttpClient;
         }
 
-        public async Task<IEnumerable<IssueDto>> HandleAsync(GetIssues query)
+        public async Task<IssueDto> HandleAsync(GetIssue query)
         {
-            var documents = _issueRepository.Collection.AsQueryable();
+            var issue = await _issueRepository.GetAsync(p => p.Key == query.IssueKey);
+            if (issue == null) return null;
 
-            var project = await _projectRepository.GetAsync(c => c.Key == query.ProjectKey);
-            if (project == null)
-            {
-                return Enumerable.Empty<IssueDto>();
-            }
+            var project = await _projectRepository.GetAsync(issue.ProjectId);
+            if (project == null) return null;
+
 
             var identity = _appContext.Identity;
             if (identity.IsAuthenticated)
             {
-                var isInProject = await _projectsApiHttpClient.IsProjectUserAsync(query.ProjectKey, identity.Id);
+                var isInProject = await _projectsApiHttpClient.IsProjectUserAsync(project.Key, identity.Id);
                 if (!isInProject)
                 {
-                    return Enumerable.Empty<IssueDto>();
+                    return null;
                 }
             }
 
-            var issues = await documents.Where(p => p.ProjectId == project.Id).ToListAsync();
-
-            return issues.Select(p => p.AsDto());
+            return issue.AsDto();
         }
     }
 }

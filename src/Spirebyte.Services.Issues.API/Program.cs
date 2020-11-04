@@ -34,7 +34,8 @@ namespace Spirebyte.Services.Issues.API
                     .UsePingEndpoint()
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
-                        .Get<GetIssues, IEnumerable<IssueDto>>("issues/{projectId:guid}")
+                        .Get<GetIssues, IEnumerable<IssueDto>>("issues/forproject/{projectKey}")
+                        .Get<GetIssue, IssueDto>("issues/{issueKey}")
                         .Post<CreateIssue>("issues",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"issues/{cmd.IssueId}"))
                     ))
