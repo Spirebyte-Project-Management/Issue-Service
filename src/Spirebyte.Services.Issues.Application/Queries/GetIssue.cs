@@ -9,5 +9,10 @@ namespace Spirebyte.Services.Issues.Application.Queries
     public class GetIssue : IQuery<IssueDto>
     {
         public string IssueKey { get; set; }
+
+        public GetIssue(string issueKey)
+        {
+            IssueKey = issueKey;
+        }
     }
 }

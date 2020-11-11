@@ -11,9 +11,10 @@ namespace Spirebyte.Services.Issues.Application.Events.External
         public Guid ProjectId { get; }
         public string Key { get; }
 
-        public ProjectCreated(Guid projectId)
+        public ProjectCreated(Guid projectId, string key)
         {
             ProjectId = projectId;
+            Key = key;
         }
     }
 }

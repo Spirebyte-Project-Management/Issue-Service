@@ -39,7 +39,6 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
             var project = await _projectRepository.GetAsync(issue.ProjectId);
             if (project == null) return null;
 
-
             var identity = _appContext.Identity;
             if (identity.IsAuthenticated)
             {
