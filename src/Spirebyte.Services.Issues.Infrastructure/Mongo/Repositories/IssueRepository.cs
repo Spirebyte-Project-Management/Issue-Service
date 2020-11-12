@@ -26,6 +26,13 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories
             return issue?.AsEntity();
         }
 
+        public async Task<Issue> GetAsync(string issueKey)
+        {
+            var issue = await _repository.GetAsync(x => x.Key == issueKey);
+
+            return issue?.AsEntity();
+        }
+
         public async Task<int> GetIssueCountOfProject(Guid projectId)
         {
             var documents = _repository.Collection.AsQueryable();
