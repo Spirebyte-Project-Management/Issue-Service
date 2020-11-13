@@ -7,7 +7,6 @@ using Spirebyte.Services.Issues.API;
 using Spirebyte.Services.Issues.Application.Commands;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Core.Entities;
-using Spirebyte.Services.Issues.Core.Entities.Base;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
@@ -18,16 +17,16 @@ using Xunit;
 namespace Spirebyte.Services.Issues.Tests.Integration.Commands
 {
     [Collection("Spirebyte collection")]
-    public class UpdateIssueTests : IDisposable
+    public class DeleteIssueTests : IDisposable
     {
-        public UpdateIssueTests(SpirebyteApplicationFactory<Program> factory)
+        public DeleteIssueTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
             _issuesMongoDbFixture = new MongoDbFixture<IssueDocument, Guid>("issues");
             _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
             _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
             factory.Server.AllowSynchronousIO = true;
-            _commandHandler = factory.Services.GetRequiredService<ICommandHandler<UpdateIssue>>();
+            _commandHandler = factory.Services.GetRequiredService<ICommandHandler<DeleteIssue>>();
         }
 
         public void Dispose()
@@ -41,19 +40,17 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         private readonly MongoDbFixture<ProjectDocument, Guid> _projectsMongoDbFixture;
         private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
-        private readonly ICommandHandler<UpdateIssue> _commandHandler;
+        private readonly ICommandHandler<DeleteIssue> _commandHandler;
 
 
         [Fact]
-        public async Task update_issue_command_should_update_issue_with_given_data_to()
+        public async Task delete_issue_command_should_remove_issue_with_given_key()
         {
             var projectId = Guid.NewGuid();
             var issueId = Guid.NewGuid();
             var issueKey = "key-1";
             var title = "Title";
-            var updatedTitle = "UpdatedTitle";
             var description = "description";
-            var updatedDescription = "updatedDescription";
             var type = IssueType.Story;
             var status = IssueStatus.TODO;
             var storypoints = 0;
@@ -61,7 +58,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
             var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
             await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
 
-            var command = new UpdateIssue(issueId, issueKey, type, status, updatedTitle, updatedDescription, storypoints, null, null);
+            var command = new DeleteIssue(issueKey);
 
             // Check if exception is thrown
 
@@ -70,27 +67,17 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
                 .Should().NotThrow();
 
 
-            var updatedIssue = await _issuesMongoDbFixture.GetAsync(command.IssueId);
+            var updatedIssue = await _issuesMongoDbFixture.GetAsync(issueId);
 
-            updatedIssue.Should().NotBeNull();
-            updatedIssue.Id.Should().Be(issueId);
-            updatedIssue.Title.Should().Be(updatedTitle);
-            updatedIssue.Description.Should().Be(updatedDescription);
+            updatedIssue.Should().BeNull();
         }
 
         [Fact]
-        public async Task update_issue_command_fails_when_issue_with_key_does_not_exist()
+        public async Task delete_issue_command_fails_when_issue_with_key_does_not_exist()
         {
-            var projectId = Guid.NewGuid();
-            var issueId = Guid.NewGuid();
             var issueKey = "key-1";
-            var title = "Title";
-            var description = "description";
-            var type = IssueType.Story;
-            var status = IssueStatus.TODO;
-            var storypoints = 0;
 
-            var command = new UpdateIssue(issueId, issueKey, type, status, title, description, storypoints, null, null);
+            var command = new DeleteIssue(issueKey);
 
             // Check if exception is thrown
 

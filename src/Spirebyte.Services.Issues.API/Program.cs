@@ -54,6 +54,7 @@ namespace Spirebyte.Services.Issues.API
                         .Get<GetIssues, IEnumerable<IssueDto>>("issues/forproject/{projectKey}")
                         .Get<GetIssue, IssueDto>("issues/{issueKey}")
                         .Put<UpdateIssue>("issues/{key}")
+                        .Delete<DeleteIssue>("issues/{key}")
                         .Post<CreateIssue>("issues",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"issues/{cmd.IssueId}"))
                     ))
