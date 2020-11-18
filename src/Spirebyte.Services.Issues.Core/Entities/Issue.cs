@@ -17,6 +17,7 @@ namespace Spirebyte.Services.Issues.Core.Entities
         public int StoryPoints { get; private set; }
 
         public Guid ProjectId { get; private set; }
+        public Guid SprintId { get; private set; }
         public IEnumerable<Guid> Assignees { get; private set; }
         public IEnumerable<Guid> LinkedIssues { get; private set; }
 

@@ -6,11 +6,13 @@ namespace Spirebyte.Services.Issues.Application.Events
     [Contract]
     public class IssueCreated : IEvent
     {
-        public Guid ProjectId { get; }
+        public Guid IssueId { get; }
+        public string IssueKey { get; }
 
-        public IssueCreated(Guid projectId)
+        public IssueCreated(Guid issueId, string issueKey)
         {
-            ProjectId = projectId;
+            IssueId = issueId;
+            IssueKey = issueKey;
         }
     }
 }
