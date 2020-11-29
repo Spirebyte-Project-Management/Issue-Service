@@ -51,7 +51,9 @@ namespace Spirebyte.Services.Issues.API
                     .UsePingEndpoint()
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
-                        .Get<GetIssues, IEnumerable<IssueDto>>("issues/forproject/{projectKey}")
+                        .Get<GetIssuesByIds, IEnumerable<IssueDto>>("issues/withIds")
+                        .Get<GetIssues, IEnumerable<IssueDto>>("issues/forProject/{projectKey}")
+                        .Get<GetIssuesWithoutSprintByProject, IEnumerable<IssueDto>>("issues/backlogForProject/{projectKey}")
                         .Get<GetIssue, IssueDto>("issues/{issueKey}")
                         .Put<UpdateIssue>("issues/{key}")
                         .Delete<DeleteIssue>("issues/{key}")

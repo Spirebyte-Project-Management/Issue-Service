@@ -37,7 +37,7 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
 
             var issue = new Issue(command.IssueId, issueKey, command.Type, command.Status, command.Title, command.Description, command.StoryPoints, command.ProjectId, command.Assignees, command.LinkedIssues, command.CreatedAt);
             await _issueRepository.AddAsync(issue);
-            await _messageBroker.PublishAsync(new IssueCreated(issue.Id, issue.Key));
+            await _messageBroker.PublishAsync(new IssueCreated(issue.Id, issue.Key, issue.ProjectId));
         }
     }
 }

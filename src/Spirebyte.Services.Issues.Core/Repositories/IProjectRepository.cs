@@ -9,5 +9,6 @@ namespace Spirebyte.Services.Issues.Core.Repositories
         Task<string> GetKeyAsync(Guid projectId);
         Task<bool> ExistsAsync(Guid id);
         Task AddAsync(Project project);
+        Task<bool> ExistsAsync(string projectKey);
     }
 }

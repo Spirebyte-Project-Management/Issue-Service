@@ -24,6 +24,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories
         }
 
         public Task<bool> ExistsAsync(Guid id) => _repository.ExistsAsync(c => c.Id == id);
+        public Task<bool> ExistsAsync(string projectKey) => _repository.ExistsAsync(c => c.Key == projectKey);
         public Task AddAsync(Project project) => _repository.AddAsync(project.AsDocument());
     }
 }

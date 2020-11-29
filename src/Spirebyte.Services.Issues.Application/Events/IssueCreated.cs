@@ -8,11 +8,13 @@ namespace Spirebyte.Services.Issues.Application.Events
     {
         public Guid IssueId { get; }
         public string IssueKey { get; }
+        public Guid ProjectId { get; }
 
-        public IssueCreated(Guid issueId, string issueKey)
+        public IssueCreated(Guid issueId, string issueKey, Guid projectId)
         {
             IssueId = issueId;
             IssueKey = issueKey;
+            ProjectId = projectId;
         }
     }
 }

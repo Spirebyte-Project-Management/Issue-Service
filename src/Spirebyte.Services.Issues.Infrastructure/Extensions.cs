@@ -58,6 +58,7 @@ namespace Spirebyte.Services.Issues.Infrastructure
             builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IProjectsApiHttpClient, ProjectsApiHttpClient>();
+            builder.Services.AddTransient<ISprintsApiHttpClient, SprintsApiHttpClient>();
             builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
             builder.Services.AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create());
 
