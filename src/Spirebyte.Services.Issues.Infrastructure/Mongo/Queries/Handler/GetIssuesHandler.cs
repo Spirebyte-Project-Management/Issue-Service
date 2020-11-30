@@ -3,6 +3,7 @@ using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Spirebyte.Services.Issues.Application;
+using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.DTO;
 using Spirebyte.Services.Issues.Application.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
@@ -11,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 {

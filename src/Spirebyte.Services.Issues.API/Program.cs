@@ -9,16 +9,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Open.Serialization.Json;
 using Spirebyte.Services.Issues.Application;
 using Spirebyte.Services.Issues.Application.Commands;
 using Spirebyte.Services.Issues.Application.DTO;
 using Spirebyte.Services.Issues.Application.Queries;
+using Spirebyte.Services.Issues.Infrastructure;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Open.Serialization.Json;
-using Spirebyte.Services.Issues.Infrastructure;
 
 namespace Spirebyte.Services.Issues.API
 {

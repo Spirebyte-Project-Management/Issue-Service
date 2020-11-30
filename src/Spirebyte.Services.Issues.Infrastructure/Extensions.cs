@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Convey;
+﻿using Convey;
 using Convey.Auth;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Events;
@@ -31,8 +26,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Open.Serialization.Json;
 using Spirebyte.Services.Issues.Application;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.Commands;
@@ -46,6 +39,11 @@ using Spirebyte.Services.Issues.Infrastructure.Exceptions;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories;
 using Spirebyte.Services.Issues.Infrastructure.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Infrastructure
 {

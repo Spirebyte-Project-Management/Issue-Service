@@ -1,6 +1,6 @@
+using Spirebyte.Services.Issues.Application;
 using System;
 using System.Collections.Generic;
-using Spirebyte.Services.Issues.Application;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Contexts
 {

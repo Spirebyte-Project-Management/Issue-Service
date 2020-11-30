@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Spirebyte.Services.Issues.Core.Entities;
+﻿using Spirebyte.Services.Issues.Core.Entities;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers
 {

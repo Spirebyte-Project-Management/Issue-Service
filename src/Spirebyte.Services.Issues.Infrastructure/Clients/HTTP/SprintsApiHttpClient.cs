@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.HTTP;
+﻿using Convey.HTTP;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Clients.HTTP
 {

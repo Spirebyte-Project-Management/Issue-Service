@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Convey.CQRS.Commands;
+using Spirebyte.Services.Issues.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Convey.CQRS.Commands;
-using Spirebyte.Services.Issues.Core.Enums;
 
 namespace Spirebyte.Services.Issues.Application.Commands
 {

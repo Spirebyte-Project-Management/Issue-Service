@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.CQRS.Commands;
-using Convey.CQRS.Queries;
+﻿using Convey.CQRS.Queries;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Issues.API;
-using Spirebyte.Services.Issues.Application.Commands;
 using Spirebyte.Services.Issues.Application.DTO;
-using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Application.Queries;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
@@ -17,6 +10,8 @@ using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Issues.Tests.Shared.Factories;
 using Spirebyte.Services.Issues.Tests.Shared.Fixtures;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Spirebyte.Services.Issues.Tests.Integration.Queries
@@ -64,7 +59,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
             var project = new Project(projectId, projectKey);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
-            var issue = new Issue(issueId, issueKey, type, status, title,description, storypoints, projectId, null, null, DateTime.Now);
+            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
             await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
 
             var query = new GetIssue(issueKey);

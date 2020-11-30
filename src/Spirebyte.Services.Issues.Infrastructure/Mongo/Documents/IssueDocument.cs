@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Convey.Types;
+﻿using Convey.Types;
 using Spirebyte.Services.Issues.Core.Enums;
+using System;
+using System.Collections.Generic;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents
 {

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.CQRS.Commands;
+﻿using Convey.CQRS.Commands;
 using Microsoft.Extensions.Logging;
-using Spirebyte.Services.Issues.Application.Events;
 using Spirebyte.Services.Issues.Application.Exceptions;
-using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Repositories;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Application.Commands.Handlers
 {

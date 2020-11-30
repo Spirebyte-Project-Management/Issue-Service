@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Spirebyte.Services.Issues.Core.Entities.Base.Interfaces;
+﻿using Spirebyte.Services.Issues.Core.Entities.Base.Interfaces;
+using System.Collections.Generic;
 
 namespace Spirebyte.Services.Issues.Core.Entities.Base
 {

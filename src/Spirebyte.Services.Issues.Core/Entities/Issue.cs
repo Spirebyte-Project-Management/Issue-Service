@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Spirebyte.Services.Issues.Core.Entities.Base;
+﻿using Spirebyte.Services.Issues.Core.Entities.Base;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Spirebyte.Services.Issues.Core.Entities
 {

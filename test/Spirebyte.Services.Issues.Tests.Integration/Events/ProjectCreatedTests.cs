@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Convey.CQRS.Events;
+﻿using Convey.CQRS.Events;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Issues.API;
@@ -11,6 +9,8 @@ using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Issues.Tests.Shared.Factories;
 using Spirebyte.Services.Issues.Tests.Shared.Fixtures;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Spirebyte.Services.Issues.Tests.Integration.Events

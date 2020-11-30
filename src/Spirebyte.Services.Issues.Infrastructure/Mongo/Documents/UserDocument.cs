@@ -1,5 +1,5 @@
-﻿using System;
-using Convey.Types;
+﻿using Convey.Types;
+using System;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents
 {

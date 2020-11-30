@@ -1,10 +1,10 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using Convey.Persistence.MongoDB;
+﻿using Convey.Persistence.MongoDB;
 using Convey.Types;
 using MongoDB.Driver;
 using Spirebyte.Services.Issues.Tests.Shared.Helpers;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Tests.Shared.Fixtures
 {
