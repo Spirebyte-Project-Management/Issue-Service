@@ -1,4 +1,5 @@
-﻿using Convey.CQRS.Commands;
+﻿using System;
+using Convey.CQRS.Commands;
 using Spirebyte.Services.Issues.Application.Events;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Application.Services.Interfaces;
@@ -30,12 +31,17 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
                 throw new ProjectNotFoundException(command.ProjectId);
             }
 
-            var projectkey = await _projectRepository.GetKeyAsync(command.ProjectId);
+            if (command.EpicId != Guid.Empty && !(await _issueRepository.ExistsAsync(command.EpicId)))
+            {
+                throw new EpicNotFoundException(command.EpicId);
+            }
+
+            var projectKey = await _projectRepository.GetKeyAsync(command.ProjectId);
             var issueCount = await _issueRepository.GetIssueCountOfProject(command.ProjectId);
-            var issueKey = $"{projectkey}-{issueCount + 1}";
+            var issueKey = $"{projectKey}-{issueCount + 1}";
 
 
-            var issue = new Issue(command.IssueId, issueKey, command.Type, command.Status, command.Title, command.Description, command.StoryPoints, command.ProjectId, command.Assignees, command.LinkedIssues, command.CreatedAt);
+            var issue = new Issue(command.IssueId, issueKey, command.Type, command.Status, command.Title, command.Description, command.StoryPoints, command.ProjectId, command.EpicId, command.Assignees, command.LinkedIssues, command.CreatedAt);
             await _issueRepository.AddAsync(issue);
             await _messageBroker.PublishAsync(new IssueCreated(issue.Id, issue.Key, issue.ProjectId));
         }

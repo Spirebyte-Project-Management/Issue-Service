@@ -47,6 +47,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         public async Task update_issue_command_should_update_issue_with_given_data_to()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var issueKey = "key-1";
             var title = "Title";
@@ -57,10 +58,10 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
+            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
             await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
 
-            var command = new UpdateIssue(issueId, issueKey, type, status, updatedTitle, updatedDescription, storypoints, null, null);
+            var command = new UpdateIssue(issueId, issueKey, type, status, updatedTitle, updatedDescription, storypoints, epicId, null, null);
 
             // Check if exception is thrown
 
@@ -81,6 +82,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         public async Task update_issue_command_fails_when_issue_with_key_does_not_exist()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var issueKey = "key-1";
             var title = "Title";
@@ -89,13 +91,39 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var command = new UpdateIssue(issueId, issueKey, type, status, title, description, storypoints, null, null);
+            var command = new UpdateIssue(issueId, issueKey, type, status, title, description, storypoints, epicId,null, null);
 
             // Check if exception is thrown
 
             _commandHandler
                 .Awaiting(c => c.HandleAsync(command))
                 .Should().Throw<IssueNotFoundException>();
+        }
+
+        [Fact]
+        public async Task update_issue_command_fails_when_epic_does_not_exist()
+        {
+            var projectId = Guid.NewGuid();
+            var epicId = Guid.NewGuid();
+            var issueId = Guid.NewGuid();
+            var issueKey = "key-1";
+            var title = "Title";
+            var description = "description";
+            var type = IssueType.Story;
+            var status = IssueStatus.TODO;
+            var storypoints = 0;
+
+
+            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, Guid.Empty, null, null, DateTime.Now);
+            await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
+
+            var command = new UpdateIssue(issueId, issueKey, type, status, title, description, storypoints, epicId, null, null);
+
+            // Check if exception is thrown
+
+            _commandHandler
+                .Awaiting(c => c.HandleAsync(command))
+                .Should().Throw<EpicNotFoundException>();
         }
     }
 }

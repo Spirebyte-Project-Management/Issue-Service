@@ -33,6 +33,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
 
         public void Dispose()
         {
+            _issuesMongoDbFixture.Dispose();
             _projectsMongoDbFixture.Dispose();
             _usersMongoDbFixture.Dispose();
         }
@@ -49,6 +50,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
         public async Task getissues_query_succeeds_when_a_issue_exists()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var issue2Id = Guid.NewGuid();
             var projectKey = "key";
@@ -63,8 +65,8 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
             var project = new Project(projectId, projectKey);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
-            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
-            var issue2 = new Issue(issue2Id, issue2Key, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
+            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, epicId,null, null, DateTime.Now);
+            var issue2 = new Issue(issue2Id, issue2Key, type, status, title, description, storypoints, projectId, epicId,null, null, DateTime.Now);
             await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
             await _issuesMongoDbFixture.InsertAsync(issue2.AsDocument());
 
@@ -110,6 +112,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
         public async Task getissues_query_returns_empty_when_project_does_not_exist()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var projectKey = "key";
             var issueKey = "key-1";
@@ -119,7 +122,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
+            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, epicId,null, null, DateTime.Now);
             await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
 
             var query = new GetIssues(projectKey);

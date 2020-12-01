@@ -47,6 +47,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         public async Task delete_issue_command_should_remove_issue_with_given_key()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var issueKey = "key-1";
             var title = "Title";
@@ -55,7 +56,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
+            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
             await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
 
             var command = new DeleteIssue(issueKey);

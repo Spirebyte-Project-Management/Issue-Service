@@ -18,12 +18,13 @@ namespace Spirebyte.Services.Issues.Application.Commands
         public int StoryPoints { get; private set; }
 
         public Guid ProjectId { get; set; }
+        public Guid EpicId { get; set; }
         public IEnumerable<Guid> Assignees { get; private set; }
         public IEnumerable<Guid> LinkedIssues { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
 
-        public CreateIssue(Guid issueId, string key, IssueType type, IssueStatus status, string title, string description, int storyPoints, Guid projectId, IEnumerable<Guid> assignees, IEnumerable<Guid> linkedIssues, DateTime createdAt)
+        public CreateIssue(Guid issueId, string key, IssueType type, IssueStatus status, string title, string description, int storyPoints, Guid projectId, Guid epicId, IEnumerable<Guid> assignees, IEnumerable<Guid> linkedIssues, DateTime createdAt)
         {
             IssueId = issueId;
             Key = key;
@@ -33,6 +34,7 @@ namespace Spirebyte.Services.Issues.Application.Commands
             Description = description;
             StoryPoints = storyPoints;
             ProjectId = projectId;
+            EpicId = epicId;
             Assignees = assignees ?? Enumerable.Empty<Guid>();
             LinkedIssues = linkedIssues ?? Enumerable.Empty<Guid>();
             CreatedAt = createdAt;

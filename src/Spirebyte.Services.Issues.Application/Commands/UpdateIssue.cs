@@ -16,11 +16,12 @@ namespace Spirebyte.Services.Issues.Application.Commands
         public string Title { get; private set; }
         public string Description { get; private set; }
         public int StoryPoints { get; private set; }
+        public Guid EpicId { get; private set; }
 
         public IEnumerable<Guid> Assignees { get; private set; }
         public IEnumerable<Guid> LinkedIssues { get; private set; }
 
-        public UpdateIssue(Guid issueId, string key, IssueType type, IssueStatus status, string title, string description, int storyPoints, IEnumerable<Guid> assignees, IEnumerable<Guid> linkedIssues)
+        public UpdateIssue(Guid issueId, string key, IssueType type, IssueStatus status, string title, string description, int storyPoints, Guid epicId, IEnumerable<Guid> assignees, IEnumerable<Guid> linkedIssues)
         {
             IssueId = issueId;
             Key = key;
@@ -29,6 +30,7 @@ namespace Spirebyte.Services.Issues.Application.Commands
             Title = title;
             Description = description;
             StoryPoints = storyPoints;
+            EpicId = epicId;
             Assignees = assignees ?? Enumerable.Empty<Guid>();
             LinkedIssues = linkedIssues ?? Enumerable.Empty<Guid>();
         }

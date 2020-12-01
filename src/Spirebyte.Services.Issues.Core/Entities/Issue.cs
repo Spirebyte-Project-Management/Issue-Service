@@ -17,14 +17,14 @@ namespace Spirebyte.Services.Issues.Core.Entities
         public int StoryPoints { get; private set; }
 
         public Guid ProjectId { get; private set; }
-        public Guid SprintId { get; private set; }
+        public Guid EpicId { get; private set; }
         public IEnumerable<Guid> Assignees { get; private set; }
         public IEnumerable<Guid> LinkedIssues { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
 
 
-        public Issue(Guid id, string key, IssueType type, IssueStatus status, string title, string description, int storyPoints, Guid projectId, IEnumerable<Guid> assignees, IEnumerable<Guid> linkedIssues, DateTime createdAt)
+        public Issue(Guid id, string key, IssueType type, IssueStatus status, string title, string description, int storyPoints, Guid projectId, Guid epicId, IEnumerable<Guid> assignees, IEnumerable<Guid> linkedIssues, DateTime createdAt)
         {
             if (projectId == Guid.Empty)
             {
@@ -49,6 +49,7 @@ namespace Spirebyte.Services.Issues.Core.Entities
             Description = description;
             StoryPoints = storyPoints;
             ProjectId = projectId;
+            EpicId = epicId;
             Assignees = assignees ??= Enumerable.Empty<Guid>(); ;
             LinkedIssues = linkedIssues ??= Enumerable.Empty<Guid>(); ;
             CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;

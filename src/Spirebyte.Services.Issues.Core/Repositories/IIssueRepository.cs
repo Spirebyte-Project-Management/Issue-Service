@@ -10,6 +10,7 @@ namespace Spirebyte.Services.Issues.Core.Repositories
         Task<Issue> GetAsync(string issueKey);
         Task<int> GetIssueCountOfProject(Guid projectId);
         Task AddAsync(Issue issue);
+        Task<bool> ExistsAsync(Guid issueId);
         Task UpdateAsync(Issue issue);
         Task DeleteAsync(Guid issueId);
     }

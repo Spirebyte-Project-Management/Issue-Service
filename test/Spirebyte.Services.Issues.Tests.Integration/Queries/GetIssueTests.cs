@@ -47,6 +47,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
         public async Task getissue_query_succeeds_when_issue_exists()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var projectKey = "key";
             var issueKey = "key-1";
@@ -59,7 +60,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
             var project = new Project(projectId, projectKey);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
-            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
+            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, epicId,null, null, DateTime.Now);
             await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
 
             var query = new GetIssue(issueKey);
@@ -110,6 +111,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
         public async Task getissue_query_returns_null_when_project_does_not_exist()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var issueKey = "key-1";
             var title = "Title";
@@ -118,7 +120,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
+            var issue = new Issue(issueId, issueKey, type, status, title, description, storypoints, projectId, epicId,null, null, DateTime.Now);
             await _issuesMongoDbFixture.InsertAsync(issue.AsDocument());
 
             var query = new GetIssue(issueKey);

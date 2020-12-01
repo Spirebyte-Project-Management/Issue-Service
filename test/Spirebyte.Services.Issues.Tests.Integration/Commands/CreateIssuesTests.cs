@@ -47,6 +47,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         public async Task create_issue_command_should_add_issue_with_given_data_to_database()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var projectKey = "key";
             var title = "Title";
@@ -59,7 +60,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var command = new CreateIssue(issueId, projectKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
+            var command = new CreateIssue(issueId, projectKey, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
 
             // Check if exception is thrown
 
@@ -84,6 +85,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         public async Task create_issue_command_fails_when_project_does_not_exist()
         {
             var projectId = Guid.NewGuid();
+            var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var projectKey = "key";
             var title = "Title";
@@ -92,13 +94,39 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var command = new CreateIssue(issueId, projectKey, type, status, title, description, storypoints, projectId, null, null, DateTime.Now);
+            var command = new CreateIssue(issueId, projectKey, type, status, title, description, storypoints, projectId, epicId,null, null, DateTime.Now);
 
             // Check if exception is thrown
 
             _commandHandler
                 .Awaiting(c => c.HandleAsync(command))
                 .Should().Throw<ProjectNotFoundException>();
+        }
+
+        [Fact]
+        public async Task create_issue_command_fails_when_epic_does_not_exist()
+        {
+            var projectId = Guid.NewGuid();
+            var epicId = Guid.NewGuid();
+            var issueId = Guid.NewGuid();
+            var projectKey = "key";
+            var title = "Title";
+            var description = "description";
+            var type = IssueType.Story;
+            var status = IssueStatus.TODO;
+            var storypoints = 0;
+
+            var project = new Project(projectId, projectKey);
+            await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
+
+
+            var command = new CreateIssue(issueId, projectKey, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
+
+            // Check if exception is thrown
+
+            _commandHandler
+                .Awaiting(c => c.HandleAsync(command))
+                .Should().Throw<EpicNotFoundException>();
         }
     }
 }

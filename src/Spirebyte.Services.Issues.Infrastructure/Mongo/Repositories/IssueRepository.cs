@@ -41,7 +41,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories
 
         }
         public Task AddAsync(Issue issue) => _repository.AddAsync(issue.AsDocument());
-
+        public Task<bool> ExistsAsync(Guid issueId) => _repository.ExistsAsync(c => c.Id == issueId);
         public Task UpdateAsync(Issue issue) => _repository.UpdateAsync(issue.AsDocument());
         public Task DeleteAsync(Guid issueId) => _repository.DeleteAsync(issueId);
     }

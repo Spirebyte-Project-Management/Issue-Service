@@ -16,6 +16,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents
         public int StoryPoints { get; set; }
 
         public Guid ProjectId { get; set; }
+        public Guid EpicId { get; set; }
         public IEnumerable<Guid> Assignees { get; set; }
         public IEnumerable<Guid> LinkedIssues { get; set; }
 

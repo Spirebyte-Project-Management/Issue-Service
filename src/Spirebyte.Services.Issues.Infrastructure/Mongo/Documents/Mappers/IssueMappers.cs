@@ -8,7 +8,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers
     internal static class IssueMappers
     {
         public static Issue AsEntity(this IssueDocument document)
-            => new Issue(document.Id, document.Key, document.Type, document.Status, document.Title, document.Description, document.StoryPoints, document.ProjectId, document.Assignees, document.LinkedIssues, document.CreatedAt);
+            => new Issue(document.Id, document.Key, document.Type, document.Status, document.Title, document.Description, document.StoryPoints, document.ProjectId, document.EpicId, document.Assignees, document.LinkedIssues, document.CreatedAt);
 
         public static IssueDocument AsDocument(this Issue entity)
             => new IssueDocument
@@ -21,6 +21,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers
                 Description = entity.Description,
                 StoryPoints = entity.StoryPoints,
                 ProjectId = entity.ProjectId,
+                EpicId = entity.EpicId,
                 Assignees = entity.Assignees ?? Enumerable.Empty<Guid>(),
                 LinkedIssues = entity.LinkedIssues ?? Enumerable.Empty<Guid>(),
                 CreatedAt = entity.CreatedAt
@@ -37,6 +38,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers
                 Description = document.Description,
                 StoryPoints = document.StoryPoints,
                 ProjectId = document.ProjectId,
+                EpicId = document.EpicId,
                 Assignees = document.Assignees ?? Enumerable.Empty<Guid>(),
                 LinkedIssues = document.LinkedIssues ?? Enumerable.Empty<Guid>(),
                 CreatedAt = document.CreatedAt

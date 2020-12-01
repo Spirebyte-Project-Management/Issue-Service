@@ -16,6 +16,7 @@ namespace Spirebyte.Services.Issues.Application.DTO
         public int StoryPoints { get; set; }
 
         public Guid ProjectId { get; set; }
+        public Guid EpicId { get; set; }
         public IEnumerable<Guid> Assignees { get; set; }
         public IEnumerable<Guid> LinkedIssues { get; set; }
 
@@ -35,6 +36,8 @@ namespace Spirebyte.Services.Issues.Application.DTO
             Title = issue.Title;
             Description = issue.Description;
             StoryPoints = issue.StoryPoints;
+            ProjectId = issue.ProjectId;
+            EpicId = issue.EpicId;
             Assignees = issue.Assignees;
             LinkedIssues = issue.LinkedIssues;
             CreatedAt = issue.CreatedAt;
