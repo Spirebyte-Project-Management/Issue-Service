@@ -31,6 +31,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
 
         public void Dispose()
         {
+            _issuesMongoDbFixture.Dispose();
             _projectsMongoDbFixture.Dispose();
             _usersMongoDbFixture.Dispose();
         }

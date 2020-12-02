@@ -53,7 +53,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
             var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
             var issue2Id = Guid.NewGuid();
-            var projectKey = "key";
+            var projectKey = "epicprojectkey";
             var issueKey = "key-1";
             var issue2Key = "key-2";
             var title = "Title";
@@ -92,7 +92,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
             var projectId = Guid.NewGuid();
             var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
-            var projectKey = "key";
+            var projectKey = "epicprojectkey";
             var issueKey = "key-1";
             var title = "Title";
             var description = "description";
@@ -125,7 +125,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Queries
             var projectId = Guid.NewGuid();
             var epicId = Guid.Empty;
             var issueId = Guid.NewGuid();
-            var projectKey = "key";
+            var projectKey = "epicprojectkey";
             var issueKey = "key-1";
             var title = "Title";
             var description = "description";
