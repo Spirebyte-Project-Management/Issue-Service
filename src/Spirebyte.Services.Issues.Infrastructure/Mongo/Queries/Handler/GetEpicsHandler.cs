@@ -6,7 +6,6 @@ using Spirebyte.Services.Issues.Application;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.DTO;
 using Spirebyte.Services.Issues.Application.Queries;
-using Spirebyte.Services.Issues.Core.Repositories;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 using System;
@@ -17,26 +16,30 @@ using Spirebyte.Services.Issues.Core.Enums;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 {
-    internal sealed class GetIssuesWithoutSprintByProjectHandler : IQueryHandler<GetIssuesWithoutSprintByProject, IEnumerable<IssueDto>>
+    internal sealed class GetEpicsHandler : IQueryHandler<GetEpics, IEnumerable<IssueDto>>
     {
         private readonly IMongoRepository<IssueDocument, Guid> _issueRepository;
-        private readonly IProjectRepository _projectRepository;
+        private readonly IMongoRepository<ProjectDocument, Guid> _projectRepository;
         private readonly IAppContext _appContext;
         private readonly IProjectsApiHttpClient _projectsApiHttpClient;
-        private readonly ISprintsApiHttpClient _sprintsApiHttpClient;
 
-        public GetIssuesWithoutSprintByProjectHandler(IMongoRepository<IssueDocument, Guid> issueRepository, IProjectRepository projectRepository, IAppContext appContext, IProjectsApiHttpClient projectsApiHttpClient, ISprintsApiHttpClient sprintsApiHttpClient)
+        public GetEpicsHandler(IMongoRepository<IssueDocument, Guid> issueRepository, IMongoRepository<ProjectDocument, Guid> projectRepository, IAppContext appContext, IProjectsApiHttpClient projectsApiHttpClient)
         {
             _issueRepository = issueRepository;
             _projectRepository = projectRepository;
             _appContext = appContext;
             _projectsApiHttpClient = projectsApiHttpClient;
-            _sprintsApiHttpClient = sprintsApiHttpClient;
         }
 
-        public async Task<IEnumerable<IssueDto>> HandleAsync(GetIssuesWithoutSprintByProject query)
+        public async Task<IEnumerable<IssueDto>> HandleAsync(GetEpics query)
         {
-            if (!await _projectRepository.ExistsAsync(query.ProjectKey)) return null;
+            var documents = _issueRepository.Collection.AsQueryable();
+
+            var project = await _projectRepository.GetAsync(c => c.Key == query.ProjectKey);
+            if (project == null)
+            {
+                return Enumerable.Empty<IssueDto>();
+            }
 
             var identity = _appContext.Identity;
             if (identity.IsAuthenticated)
@@ -48,14 +51,9 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
                 }
             }
 
-            var issueIds = await _sprintsApiHttpClient.IssuesWithoutSprintForProject(query.ProjectKey);
-            if (issueIds == null) return Enumerable.Empty<IssueDto>();
+            var issues = await documents.Where(p => p.ProjectId == project.Id && p.Type == IssueType.Epic).ToListAsync();
 
-            var documents = _issueRepository.Collection.AsQueryable();
-
-            var issues = await documents.Where(u => issueIds.Contains(u.Id) && u.Type != IssueType.Epic).OrderBy(i => i.Key).ToListAsync();
-
-            return issues.Select(i => i.AsDto());
+            return issues.Select(p => p.AsDto());
         }
     }
 }

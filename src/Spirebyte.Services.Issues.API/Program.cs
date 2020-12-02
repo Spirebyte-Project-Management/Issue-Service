@@ -53,6 +53,7 @@ namespace Spirebyte.Services.Issues.API
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
                         .Get<GetIssuesByIds, IEnumerable<IssueDto>>("issues/withIds")
                         .Get<GetIssues, IEnumerable<IssueDto>>("issues/forProject/{projectKey}")
+                        .Get<GetEpics, IEnumerable<IssueDto>>("issues/epicsForProject/{projectKey}")
                         .Get<GetIssuesWithoutSprintByProject, IEnumerable<IssueDto>>("issues/backlogForProject/{projectKey}")
                         .Get<GetIssue, IssueDto>("issues/{issueKey}")
                         .Put<UpdateIssue>("issues/{key}")
