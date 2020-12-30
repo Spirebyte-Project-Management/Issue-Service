@@ -1,5 +1,4 @@
 ﻿using Spirebyte.Services.Issues.Core.Exceptions.Base;
-using System;
 
 namespace Spirebyte.Services.Issues.Core.Exceptions
 {
@@ -7,7 +6,7 @@ namespace Spirebyte.Services.Issues.Core.Exceptions
     {
         public override string Code { get; } = "invalid_project_id";
 
-        public InvalidProjectIdException(Guid projectId) : base($"Invalid projectId: {projectId}.")
+        public InvalidProjectIdException(string projectId) : base($"Invalid projectId: {projectId}.")
         {
         }
     }

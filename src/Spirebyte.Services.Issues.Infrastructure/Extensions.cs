@@ -77,8 +77,8 @@ namespace Spirebyte.Services.Issues.Infrastructure
                 .AddMongo()
                 .AddRedis()
                 .AddJaeger()
-                .AddMongoRepository<ProjectDocument, Guid>("projects")
-                .AddMongoRepository<IssueDocument, Guid>("issues")
+                .AddMongoRepository<ProjectDocument, string>("projects")
+                .AddMongoRepository<IssueDocument, string>("issues")
                 .AddMongoRepository<UserDocument, Guid>("users")
                 .AddWebApiSwaggerDocs()
                 .AddSecurity();
@@ -93,7 +93,9 @@ namespace Spirebyte.Services.Issues.Infrastructure
                 .UseRabbitMq()
                 .SubscribeCommand<CreateIssue>()
                 .SubscribeEvent<SignedUp>()
-                .SubscribeEvent<ProjectCreated>();
+                .SubscribeEvent<ProjectCreated>()
+                .SubscribeEvent<AddedIssueToSprint>()
+                .SubscribeEvent<RemovedIssueFromSprint>();
 
             return app;
         }

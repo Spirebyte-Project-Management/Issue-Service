@@ -21,7 +21,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Events
         public ProjectCreatedTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
+            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
             _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
             factory.Server.AllowSynchronousIO = true;
             _eventHandler = factory.Services.GetRequiredService<IEventHandler<ProjectCreated>>();
@@ -34,7 +34,7 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Events
         }
 
         private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, Guid> _projectsMongoDbFixture;
+        private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
         private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
         private readonly IEventHandler<ProjectCreated> _eventHandler;
@@ -43,11 +43,9 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Events
         [Fact]
         public async Task projectcreated_event_should_add_project_with_given_data_to_database()
         {
-            var projectId = Guid.NewGuid();
-            var key = "key";
+            var projectId = "projectKey";
 
-
-            var externalEvent = new ProjectCreated(projectId, key);
+            var externalEvent = new ProjectCreated(projectId);
 
             // Check if exception is thrown
 
@@ -60,20 +58,18 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Events
 
             project.Should().NotBeNull();
             project.Id.Should().Be(projectId);
-            project.Key.Should().Be(key);
         }
 
 
         [Fact]
         public async Task projectcreated_event_fails_when_project_with_id_already_exists()
         {
-            var projectId = Guid.NewGuid();
-            var key = "key";
+            var projectId = "projectKey";
 
-            var project = new Project(projectId, key);
+            var project = new Project(projectId);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
-            var externalEvent = new ProjectCreated(projectId, key);
+            var externalEvent = new ProjectCreated(projectId);
 
             // Check if exception is thrown
 

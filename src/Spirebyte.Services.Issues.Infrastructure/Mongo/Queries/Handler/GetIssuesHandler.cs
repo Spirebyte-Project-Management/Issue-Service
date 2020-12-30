@@ -17,24 +17,29 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 {
     internal sealed class GetIssuesHandler : IQueryHandler<GetIssues, IEnumerable<IssueDto>>
     {
-        private readonly IMongoRepository<IssueDocument, Guid> _issueRepository;
-        private readonly IMongoRepository<ProjectDocument, Guid> _projectRepository;
+        private readonly IMongoRepository<IssueDocument, string> _issueRepository;
+        private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
         private readonly IAppContext _appContext;
         private readonly IProjectsApiHttpClient _projectsApiHttpClient;
+        private readonly ISprintsApiHttpClient _sprintsApiHttpClient;
 
-        public GetIssuesHandler(IMongoRepository<IssueDocument, Guid> issueRepository, IMongoRepository<ProjectDocument, Guid> projectRepository, IAppContext appContext, IProjectsApiHttpClient projectsApiHttpClient)
+        public GetIssuesHandler(IMongoRepository<IssueDocument, string> issueRepository, IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext, IProjectsApiHttpClient projectsApiHttpClient, ISprintsApiHttpClient sprintsApiHttpClient)
         {
             _issueRepository = issueRepository;
             _projectRepository = projectRepository;
             _appContext = appContext;
             _projectsApiHttpClient = projectsApiHttpClient;
+            _sprintsApiHttpClient = sprintsApiHttpClient;
         }
 
         public async Task<IEnumerable<IssueDto>> HandleAsync(GetIssues query)
         {
             var documents = _issueRepository.Collection.AsQueryable();
 
-            var project = await _projectRepository.GetAsync(c => c.Key == query.ProjectKey);
+            if (query.ProjectId == null)
+                return Enumerable.Empty<IssueDto>();
+
+            var project = await _projectRepository.GetAsync(query.ProjectId);
             if (project == null)
             {
                 return Enumerable.Empty<IssueDto>();
@@ -43,14 +48,27 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
             var identity = _appContext.Identity;
             if (identity.IsAuthenticated)
             {
-                var isInProject = await _projectsApiHttpClient.IsProjectUserAsync(query.ProjectKey, identity.Id);
+                var isInProject = await _projectsApiHttpClient.IsProjectUserAsync(query.ProjectId, identity.Id);
                 if (!isInProject)
                 {
                     return Enumerable.Empty<IssueDto>();
                 }
             }
 
-            var issues = await documents.Where(p => p.ProjectId == project.Id).ToListAsync();
+            string[] sprintIssueIds = null;
+            if (query.HasSprint != null)
+            {
+                sprintIssueIds = await _sprintsApiHttpClient.IssuesWithoutSprintForProject(query.ProjectId);
+                if (sprintIssueIds == null) return Enumerable.Empty<IssueDto>();
+            }
+
+            var filter = new Func<IssueDocument, bool>(p =>
+                p.ProjectId == project.Id
+                && (query.Type == null || p.Type == query.Type.Value)
+                && (query.IssueIds == null || query.IssueIds.Contains(p.Id))
+                && (query.HasSprint == null || (query.HasSprint.Value ? !sprintIssueIds!.Contains(p.Id) : sprintIssueIds!.Contains(p.Id))));
+
+            var issues = documents.Where(filter).ToList();
 
             return issues.Select(p => p.AsDto());
         }

@@ -1,6 +1,5 @@
 ﻿using Convey.CQRS.Events;
 using Convey.MessageBrokers;
-using System;
 
 namespace Spirebyte.Services.Issues.Application.Events.External
 {
@@ -8,13 +7,11 @@ namespace Spirebyte.Services.Issues.Application.Events.External
     [Message("projects")]
     public class ProjectCreated : IEvent
     {
-        public Guid ProjectId { get; }
-        public string Key { get; }
+        public string ProjectId { get; }
 
-        public ProjectCreated(Guid projectId, string key)
+        public ProjectCreated(string projectId)
         {
             ProjectId = projectId;
-            Key = key;
         }
     }
 }

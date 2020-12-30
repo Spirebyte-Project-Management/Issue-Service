@@ -1,6 +1,5 @@
 ﻿using Convey.HTTP;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
-using System;
 using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Clients.HTTP
@@ -16,8 +15,6 @@ namespace Spirebyte.Services.Issues.Infrastructure.Clients.HTTP
             _url = options.Services["sprints"];
         }
 
-        public Task<bool> IsProjectUserAsync(string key, Guid userId) => _client.GetAsync<bool>($"{_url}/projects/{key}/hasuser/{userId}/");
-
-        public Task<Guid[]> IssuesWithoutSprintForProject(string projectKey) => _client.GetAsync<Guid[]>($"{_url}/issuesWithoutSprintForProject/{projectKey}");
+        public Task<string[]> IssuesWithoutSprintForProject(string projectId) => _client.GetAsync<string[]>($"{_url}/issuesWithoutSprintForProject/{projectId}");
     }
 }

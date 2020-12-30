@@ -6,19 +6,18 @@ using Spirebyte.Services.Issues.Application.DTO;
 using Spirebyte.Services.Issues.Application.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
-using System;
 using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 {
     internal sealed class GetIssueHandler : IQueryHandler<GetIssue, IssueDto>
     {
-        private readonly IMongoRepository<IssueDocument, Guid> _issueRepository;
-        private readonly IMongoRepository<ProjectDocument, Guid> _projectRepository;
+        private readonly IMongoRepository<IssueDocument, string> _issueRepository;
+        private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
         private readonly IAppContext _appContext;
         private readonly IProjectsApiHttpClient _projectsApiHttpClient;
 
-        public GetIssueHandler(IMongoRepository<IssueDocument, Guid> issueRepository, IMongoRepository<ProjectDocument, Guid> projectRepository, IAppContext appContext, IProjectsApiHttpClient projectsApiHttpClient)
+        public GetIssueHandler(IMongoRepository<IssueDocument, string> issueRepository, IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext, IProjectsApiHttpClient projectsApiHttpClient)
         {
             _issueRepository = issueRepository;
             _projectRepository = projectRepository;
@@ -28,7 +27,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 
         public async Task<IssueDto> HandleAsync(GetIssue query)
         {
-            var issue = await _issueRepository.GetAsync(p => p.Key == query.IssueKey);
+            var issue = await _issueRepository.GetAsync(p => p.Id == query.Id);
             if (issue == null) return null;
 
             var project = await _projectRepository.GetAsync(issue.ProjectId);
@@ -37,7 +36,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
             var identity = _appContext.Identity;
             if (identity.IsAuthenticated)
             {
-                var isInProject = await _projectsApiHttpClient.IsProjectUserAsync(project.Key, identity.Id);
+                var isInProject = await _projectsApiHttpClient.IsProjectUserAsync(project.Id, identity.Id);
                 if (!isInProject)
                 {
                     return null;

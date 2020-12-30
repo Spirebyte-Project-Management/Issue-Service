@@ -5,11 +5,11 @@ namespace Spirebyte.Services.Issues.Application.Commands
     [Contract]
     public class DeleteIssue : ICommand
     {
-        public string Key { get; set; }
+        public string IssueId { get; set; }
 
-        public DeleteIssue(string key)
+        public DeleteIssue(string issueId)
         {
-            Key = key;
+            IssueId = issueId;
         }
     }
 }

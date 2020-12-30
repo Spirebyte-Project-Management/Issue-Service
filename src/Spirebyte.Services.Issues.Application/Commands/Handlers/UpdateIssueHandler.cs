@@ -1,5 +1,4 @@
-﻿using System;
-using Convey.CQRS.Commands;
+﻿using Convey.CQRS.Commands;
 using Microsoft.Extensions.Logging;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Core.Entities;
@@ -21,19 +20,19 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
 
         public async Task HandleAsync(UpdateIssue command)
         {
-            var issue = await _issueRepository.GetAsync(command.Key);
+            var issue = await _issueRepository.GetAsync(command.IssueId);
             if (issue is null)
             {
                 throw new IssueNotFoundException(command.IssueId);
             }
 
-            if (command.EpicId != Guid.Empty && !(await _issueRepository.ExistsAsync(command.EpicId)))
+            if (!string.IsNullOrEmpty(command.EpicId) && !(await _issueRepository.ExistsAsync(command.EpicId)))
             {
                 throw new EpicNotFoundException(command.EpicId);
             }
 
 
-            issue = new Issue(issue.Id, issue.Key, command.Type, command.Status, command.Title, command.Description, command.StoryPoints, issue.ProjectId, command.EpicId, command.Assignees, command.LinkedIssues, issue.CreatedAt);
+            issue = new Issue(issue.Id, command.Type, command.Status, command.Title, command.Description, command.StoryPoints, issue.ProjectId, command.EpicId, issue.SprintId, command.Assignees, command.LinkedIssues, issue.CreatedAt);
             await _issueRepository.UpdateAsync(issue);
 
             _logger.LogInformation($"Updated issue with id: {issue.Id}.");

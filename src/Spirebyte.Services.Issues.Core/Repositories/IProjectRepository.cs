@@ -1,14 +1,11 @@
 ﻿using Spirebyte.Services.Issues.Core.Entities;
-using System;
 using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Core.Repositories
 {
     public interface IProjectRepository
     {
-        Task<string> GetKeyAsync(Guid projectId);
-        Task<bool> ExistsAsync(Guid id);
         Task AddAsync(Project project);
-        Task<bool> ExistsAsync(string projectKey);
+        Task<bool> ExistsAsync(string projectId);
     }
 }

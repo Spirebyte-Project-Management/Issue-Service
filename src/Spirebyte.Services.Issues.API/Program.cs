@@ -1,4 +1,5 @@
 using Convey;
+using Convey.CQRS.Queries;
 using Convey.Logging;
 using Convey.Secrets.Vault;
 using Convey.Types;
@@ -16,6 +17,7 @@ using Spirebyte.Services.Issues.Application;
 using Spirebyte.Services.Issues.Application.Commands;
 using Spirebyte.Services.Issues.Application.DTO;
 using Spirebyte.Services.Issues.Application.Queries;
+using Spirebyte.Services.Issues.Core.Repositories;
 using Spirebyte.Services.Issues.Infrastructure;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -51,15 +53,19 @@ namespace Spirebyte.Services.Issues.API
                     .UsePingEndpoint()
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
-                        .Get<GetIssuesByIds, IEnumerable<IssueDto>>("issues/withIds")
-                        .Get<GetIssues, IEnumerable<IssueDto>>("issues/forProject/{projectKey}")
-                        .Get<GetEpics, IEnumerable<IssueDto>>("issues/epicsForProject/{projectKey}")
-                        .Get<GetIssuesWithoutSprintByProject, IEnumerable<IssueDto>>("issues/backlogForProject/{projectKey}")
-                        .Get<GetIssue, IssueDto>("issues/{issueKey}")
-                        .Put<UpdateIssue>("issues/{key}")
-                        .Delete<DeleteIssue>("issues/{key}")
+                        .Get<GetIssues, IEnumerable<IssueDto>>("issues")
+                        .Get<GetIssue, IssueDto>("issues/{id}")
+                        .Put<UpdateIssue>("issues/{IssueId}")
+                        .Delete<DeleteIssue>("issues/{IssueId}")
                         .Post<CreateIssue>("issues",
-                            afterDispatch: (cmd, ctx) => ctx.Response.Created($"issues/{cmd.IssueId}"))
+                            afterDispatch: async (cmd, ctx) =>
+                            {
+                                var issue = await ctx.RequestServices.GetService<IIssueRepository>().GetLatest();
+                                await ctx.Response.Created($"issues/{issue.Id}",
+                                    await ctx.RequestServices.GetService<IQueryDispatcher>()
+                                        .QueryAsync<GetIssue, IssueDto>(new GetIssue(issue.Id)));
+                            })
+
                     ))
                 .UseLogging()
                 .UseVault();

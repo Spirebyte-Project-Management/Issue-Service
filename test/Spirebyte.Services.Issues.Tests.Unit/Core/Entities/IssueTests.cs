@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Spirebyte.Services.Issues.Core.Entities;
-using Spirebyte.Services.Issues.Core.Entities.Base;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Exceptions;
 using System;
@@ -13,21 +12,20 @@ namespace Spirebyte.Services.Issues.Tests.Unit.Core.Entities
         [Fact]
         public void given_valid_input_issue_should_be_created()
         {
-            var issueId = new AggregateId();
-            var epicId = Guid.Empty;
-            var projectId = new AggregateId();
-            var key = "id-1";
+            var projectId = "projectKey";
+            var epicId = "epicKey";
+            var issueId = "issueKey";
+            var sprintId = string.Empty;
             var type = IssueType.Task;
             var status = IssueStatus.TODO;
             var title = "Title";
             var description = "description";
             var storyPoints = 10;
 
-            var issue = new Issue(issueId, key, type, status, title, description, storyPoints, projectId, epicId,null, null, DateTime.UtcNow);
+            var issue = new Issue(issueId, type, status, title, description, storyPoints, projectId, epicId, sprintId, null, null, DateTime.UtcNow);
 
             issue.Should().NotBeNull();
             issue.Id.Should().Be(issueId);
-            issue.Key.Should().Be(key);
             issue.Type.Should().Be(type);
             issue.Status.Should().Be(status);
             issue.Title.Should().Be(title);
@@ -37,51 +35,53 @@ namespace Spirebyte.Services.Issues.Tests.Unit.Core.Entities
         }
 
         [Fact]
-        public void given_empty_projectid_issue_should_throw_an_exeption()
+        public void given_empty_projectid_issue_should_throw_an_exception()
         {
-            var issueId = new AggregateId();
-            var epicId = Guid.Empty;
-            var projectId = Guid.Empty;
-            var key = "id-1";
+            var projectId = string.Empty;
+            var epicId = "epicKey";
+            var issueId = "issueKey";
+            var sprintId = string.Empty;
             var type = IssueType.Task;
             var status = IssueStatus.TODO;
             var title = "Title";
             var description = "description";
             var storyPoints = 10;
 
-            Action act = () => new Issue(issueId, key, type, status, title, description, storyPoints, projectId, epicId,null, null, DateTime.UtcNow);
+            Action act = () => new Issue(issueId, type, status, title, description, storyPoints, projectId, epicId, sprintId, null, null, DateTime.UtcNow);
             act.Should().Throw<InvalidProjectIdException>();
         }
 
         [Fact]
-        public void given_empty_key_issue_should_throw_an_exeption()
+        public void given_empty_id_issue_should_throw_an_exception()
         {
-            var issueId = new AggregateId();
-            var epicId = Guid.Empty;
-            var projectId = new AggregateId();
+            var projectId = "projectKey";
+            var epicId = "epicKey";
+            var issueId = string.Empty;
+            var sprintId = string.Empty;
             var type = IssueType.Task;
             var status = IssueStatus.TODO;
             var title = "Title";
             var description = "description";
             var storyPoints = 10;
 
-            Action act = () => new Issue(issueId, null, type, status, title, description, storyPoints, projectId, epicId,null, null, DateTime.UtcNow);
-            act.Should().Throw<InvalidKeyException>();
+            Action act = () => new Issue(issueId, type, status, title, description, storyPoints, projectId, epicId, sprintId, null, null, DateTime.UtcNow);
+            act.Should().Throw<InvalidIdException>();
         }
 
         [Fact]
         public void given_empty_title_issue_should_throw_an_exeption()
         {
-            var issueId = new AggregateId();
-            var epicId = Guid.Empty;
-            var projectId = new AggregateId();
-            var key = "id-1";
+            var projectId = "projectKey";
+            var epicId = "epicKey";
+            var issueId = "issueKey";
+            var sprintId = string.Empty;
             var type = IssueType.Task;
             var status = IssueStatus.TODO;
+            var title = string.Empty;
             var description = "description";
             var storyPoints = 10;
 
-            Action act = () => new Issue(issueId, key, type, status, null, description, storyPoints, projectId, epicId,null, null, DateTime.UtcNow);
+            Action act = () => new Issue(issueId, type, status, title, description, storyPoints, projectId, epicId, sprintId, null, null, DateTime.UtcNow);
             act.Should().Throw<InvalidTitleException>();
         }
     }

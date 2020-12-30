@@ -22,8 +22,8 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         public CreateIssuesTests(SpirebyteApplicationFactory<Program> factory)
         {
             _rabbitMqFixture = new RabbitMqFixture();
-            _issuesMongoDbFixture = new MongoDbFixture<IssueDocument, Guid>("issues");
-            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, Guid>("projects");
+            _issuesMongoDbFixture = new MongoDbFixture<IssueDocument, string>("issues");
+            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
             _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
             factory.Server.AllowSynchronousIO = true;
             _commandHandler = factory.Services.GetRequiredService<ICommandHandler<CreateIssue>>();
@@ -37,8 +37,8 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         }
 
         private const string Exchange = "issues";
-        private readonly MongoDbFixture<IssueDocument, Guid> _issuesMongoDbFixture;
-        private readonly MongoDbFixture<ProjectDocument, Guid> _projectsMongoDbFixture;
+        private readonly MongoDbFixture<IssueDocument, string> _issuesMongoDbFixture;
+        private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
         private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
         private readonly RabbitMqFixture _rabbitMqFixture;
         private readonly ICommandHandler<CreateIssue> _commandHandler;
@@ -47,21 +47,22 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         [Fact]
         public async Task create_issue_command_should_add_issue_with_given_data_to_database()
         {
-            var projectId = Guid.NewGuid();
-            var epicId = Guid.Empty;
-            var issueId = Guid.NewGuid();
-            var projectKey = "key";
+            var projectId = "projectkey";
+            var epicId = string.Empty;
+            var issueId = string.Empty;
             var title = "Title";
             var description = "description";
             var type = IssueType.Story;
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var project = new Project(projectId, projectKey);
+            var expectedIssueId = $"{projectId}-1";
+
+            var project = new Project(projectId);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var command = new CreateIssue(issueId, projectKey, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
+            var command = new CreateIssue(issueId, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
 
             // Check if exception is thrown
 
@@ -70,10 +71,10 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
                 .Should().NotThrow();
 
 
-            var issue = await _issuesMongoDbFixture.GetAsync(command.IssueId);
+            var issue = await _issuesMongoDbFixture.GetAsync(expectedIssueId);
 
             issue.Should().NotBeNull();
-            issue.Id.Should().Be(issueId);
+            issue.Id.Should().Be(expectedIssueId);
             issue.Type.Should().Be(type);
             issue.Status.Should().Be(status);
             issue.Title.Should().Be(title);
@@ -85,17 +86,16 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         [Fact]
         public async Task create_issue_command_fails_when_project_does_not_exist()
         {
-            var projectId = Guid.NewGuid();
-            var epicId = Guid.Empty;
-            var issueId = Guid.NewGuid();
-            var projectKey = "key";
+            var projectId = "projectKey";
+            var epicId = "epicKey";
+            var issueId = "issueKey";
             var title = "Title";
             var description = "description";
             var type = IssueType.Story;
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var command = new CreateIssue(issueId, projectKey, type, status, title, description, storypoints, projectId, epicId,null, null, DateTime.Now);
+            var command = new CreateIssue(issueId, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
 
             // Check if exception is thrown
 
@@ -107,21 +107,20 @@ namespace Spirebyte.Services.Issues.Tests.Integration.Commands
         [Fact]
         public async Task create_issue_command_fails_when_epic_does_not_exist()
         {
-            var projectId = Guid.NewGuid();
-            var epicId = Guid.NewGuid();
-            var issueId = Guid.NewGuid();
-            var projectKey = "key";
+            var projectId = "projectKey";
+            var epicId = "epicKey";
+            var issueId = "issueKey";
             var title = "Title";
             var description = "description";
             var type = IssueType.Story;
             var status = IssueStatus.TODO;
             var storypoints = 0;
 
-            var project = new Project(projectId, projectKey);
+            var project = new Project(projectId);
             await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-            var command = new CreateIssue(issueId, projectKey, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
+            var command = new CreateIssue(issueId, type, status, title, description, storypoints, projectId, epicId, null, null, DateTime.Now);
 
             // Check if exception is thrown
 

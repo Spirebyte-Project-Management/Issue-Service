@@ -1,11 +1,9 @@
 ﻿using Convey.Types;
-using System;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents
 {
-    internal sealed class ProjectDocument : IIdentifiable<Guid>
+    internal sealed class ProjectDocument : IIdentifiable<string>
     {
-        public Guid Id { get; set; }
-        public string Key { get; set; }
+        public string Id { get; set; }
     }
 }

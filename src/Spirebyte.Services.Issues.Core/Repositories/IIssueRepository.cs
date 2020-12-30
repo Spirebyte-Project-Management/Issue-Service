@@ -1,17 +1,16 @@
 ﻿using Spirebyte.Services.Issues.Core.Entities;
-using System;
 using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Core.Repositories
 {
     public interface IIssueRepository
     {
-        Task<Issue> GetAsync(Guid issueId);
-        Task<Issue> GetAsync(string issueKey);
-        Task<int> GetIssueCountOfProject(Guid projectId);
+        Task<Issue> GetAsync(string issueId);
+        Task<int> GetIssueCountOfProject(string projectId);
+        Task<Issue> GetLatest();
         Task AddAsync(Issue issue);
-        Task<bool> ExistsAsync(Guid issueId);
+        Task<bool> ExistsAsync(string issueId);
         Task UpdateAsync(Issue issue);
-        Task DeleteAsync(Guid issueId);
+        Task DeleteAsync(string issueId);
     }
 }

@@ -19,10 +19,10 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
 
         public async Task HandleAsync(DeleteIssue command)
         {
-            var issue = await _issueRepository.GetAsync(command.Key);
+            var issue = await _issueRepository.GetAsync(command.IssueId);
             if (issue is null)
             {
-                throw new IssueNotFoundException(command.Key);
+                throw new IssueNotFoundException(command.IssueId);
             }
 
 

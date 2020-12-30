@@ -1,17 +1,13 @@
-using System;
-
 namespace Spirebyte.Services.Issues.Core.Entities
 {
     public class Project
     {
-        public Guid Id { get; private set; }
-        public string Key { get; private set; }
+        public string Id { get; private set; }
 
 
-        public Project(Guid id, string key)
+        public Project(string id)
         {
             Id = id;
-            Key = key;
         }
     }
 }
