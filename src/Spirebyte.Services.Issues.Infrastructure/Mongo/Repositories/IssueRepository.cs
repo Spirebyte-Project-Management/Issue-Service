@@ -5,6 +5,8 @@ using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Repositories;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories
@@ -30,7 +32,15 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories
             var documents = _repository.Collection.AsQueryable();
 
             return await documents.CountAsync(c => c.ProjectId == projectId);
+        }
 
+        public async Task<List<Issue>> GetIssuesWithSprint(string sprintId)
+        {
+            var documents = _repository.Collection.AsQueryable();
+
+            var issues = await documents.Where(c => c.SprintId == sprintId).ToListAsync();
+
+            return issues.Select(p => p.AsEntity()).ToList();
         }
         public Task AddAsync(Issue issue) => _repository.AddAsync(issue.AsDocument());
         public Task<bool> ExistsAsync(string issueId) => _repository.ExistsAsync(c => c.Id == issueId);

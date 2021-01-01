@@ -94,6 +94,7 @@ namespace Spirebyte.Services.Issues.Infrastructure
                 .SubscribeCommand<CreateIssue>()
                 .SubscribeEvent<SignedUp>()
                 .SubscribeEvent<ProjectCreated>()
+                .SubscribeEvent<EndedSprint>()
                 .SubscribeEvent<AddedIssueToSprint>()
                 .SubscribeEvent<RemovedIssueFromSprint>();
 
