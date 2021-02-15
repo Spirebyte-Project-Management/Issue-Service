@@ -54,12 +54,12 @@ namespace Spirebyte.Services.Issues.API
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
                         .Get<GetComments, IEnumerable<CommentDto>>("issues/comments")
-                        .Get<GetComment, CommentDto>("issues/comment/{id}")
-                        .Post<CreateIssue>("issues/comment",
+                        .Get<GetComment, CommentDto>("issues/comments/{id}")
+                        .Post<CreateComment>("issues/comments",
                             afterDispatch: async (cmd, ctx) =>
                             {
                                 var comment = await ctx.RequestServices.GetService<ICommentRepository>().GetLatest();
-                                await ctx.Response.Created($"issues/comment/{comment.Id}",
+                                await ctx.Response.Created($"issues/comments/{comment.Id}",
                                     await ctx.RequestServices.GetService<IQueryDispatcher>()
                                         .QueryAsync<GetComment, CommentDto>(new GetComment(comment.Id)));
                             })

@@ -40,17 +40,18 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
                 return Enumerable.Empty<CommentDto>();
 
             var issue = await _issueRepository.GetAsync(query.IssueId);
+            if (query.IssueId != null && issue == null) return Enumerable.Empty<CommentDto>();
 
-            var project = await _projectRepository.GetAsync(issue == null ? query.ProjectId : issue.Id);
-            if (project == null) return Enumerable.Empty<CommentDto>();
+            var project = await _projectRepository.GetAsync(query.ProjectId);
+            if (query.ProjectId != null && project == null) return Enumerable.Empty<CommentDto>();
 
-            if (await IsUserInProject(project.Id))
+            if (!await IsUserInProject(project == null ? issue.ProjectId : project.Id))
             {
                 return Enumerable.Empty<CommentDto>();
             }
 
             var filter = new Func<CommentDocument, bool>(p =>
-                p.ProjectId == project.Id
+                (query.ProjectId == null || p.ProjectId == query.ProjectId)
                 && (query.IssueId == null || p.IssueId == query.IssueId));
 
             var comments = documents.Where(filter).ToList();
