@@ -53,8 +53,11 @@ namespace Spirebyte.Services.Issues.API
                     .UsePingEndpoint()
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
+                        .Get<GetHistory, IEnumerable<HistoryDto>>("issues/history")
                         .Get<GetComments, IEnumerable<CommentDto>>("issues/comments")
                         .Get<GetComment, CommentDto>("issues/comments/{id}")
+                        .Put<UpdateComment>("issues/comments/{Id}")
+                        .Delete<DeleteComment>("issues/comments/{Id}")
                         .Post<CreateComment>("issues/comments",
                             afterDispatch: async (cmd, ctx) =>
                             {

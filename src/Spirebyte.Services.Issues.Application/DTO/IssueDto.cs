@@ -21,26 +21,5 @@ namespace Spirebyte.Services.Issues.Application.DTO
         public IEnumerable<Guid> LinkedIssues { get; set; }
 
         public DateTime CreatedAt { get; set; }
-
-
-        public IssueDto()
-        {
-        }
-
-        public IssueDto(Issue issue)
-        {
-            Id = issue.Id;
-            Type = issue.Type;
-            Status = issue.Status;
-            Title = issue.Title;
-            Description = issue.Description;
-            StoryPoints = issue.StoryPoints;
-            ProjectId = issue.ProjectId;
-            EpicId = issue.EpicId;
-            SprintId = issue.SprintId;
-            Assignees = issue.Assignees;
-            LinkedIssues = issue.LinkedIssues;
-            CreatedAt = issue.CreatedAt;
-        }
     }
 }

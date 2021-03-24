@@ -14,6 +14,7 @@ namespace Spirebyte.Services.Issues.Core.Entities
         public Guid AuthorId { get; private set; }
         public string Body { get; private set; }
         public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
 
         public IEnumerable<Reaction> Reactions { get; private set; }
 
@@ -49,8 +50,14 @@ namespace Spirebyte.Services.Issues.Core.Entities
             ProjectId = projectId;
             AuthorId = authorId;
             Body = body;
-            CreatedAt = createdAt;
+            CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;
             Reactions = reactions;
+        }
+
+        public Comment(string id, string issueId, string projectId, Guid authorId, string body, DateTime createdAt,
+            DateTime updatedAt, IEnumerable<Reaction> reactions) : this(id, issueId, projectId, authorId, body, createdAt, reactions)
+        {
+            UpdatedAt = updatedAt;
         }
     }
 

@@ -49,7 +49,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
                 }
             }
 
-            return comment.AsDto();
+            return comment.AsDto(_appContext.Identity);
         }
     }
 }

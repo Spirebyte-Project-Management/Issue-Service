@@ -5,6 +5,7 @@ using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Repositories;
 using System.Threading.Tasks;
+using Spirebyte.Services.Issues.Core.Enums;
 
 namespace Spirebyte.Services.Issues.Application.Commands.Handlers
 {
@@ -14,13 +15,15 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
         private readonly IProjectRepository _projectRepository;
         private readonly IIssueRepository _issueRepository;
         private readonly IMessageBroker _messageBroker;
+        private readonly IHistoryService _historyService;
 
         public CreateIssueHandler(IProjectRepository projectRepository, IIssueRepository issueRepository,
-            IMessageBroker messageBroker)
+            IMessageBroker messageBroker, IHistoryService historyService)
         {
             _projectRepository = projectRepository;
             _issueRepository = issueRepository;
             _messageBroker = messageBroker;
+            _historyService = historyService;
         }
 
         public async Task HandleAsync(CreateIssue command)
@@ -42,6 +45,8 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
             var issue = new Issue(issueId, command.Type, command.Status, command.Title, command.Description, command.StoryPoints, command.ProjectId, command.EpicId, null, command.Assignees, command.LinkedIssues, command.CreatedAt);
             await _issueRepository.AddAsync(issue);
             await _messageBroker.PublishAsync(new IssueCreated(issue.Id, issue.ProjectId));
+
+            await _historyService.SaveHistory(Issue.Empty, issue, HistoryTypes.Created);
         }
     }
 }

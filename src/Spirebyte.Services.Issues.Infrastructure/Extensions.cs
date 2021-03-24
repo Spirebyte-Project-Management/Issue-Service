@@ -56,6 +56,7 @@ namespace Spirebyte.Services.Issues.Infrastructure
             builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<ICommentRepository, CommentRepository>();
+            builder.Services.AddTransient<IHistoryRepository, HistoryRepository>();
             builder.Services.AddTransient<IProjectsApiHttpClient, ProjectsApiHttpClient>();
             builder.Services.AddTransient<ISprintsApiHttpClient, SprintsApiHttpClient>();
             builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
@@ -82,6 +83,7 @@ namespace Spirebyte.Services.Issues.Infrastructure
                 .AddMongoRepository<IssueDocument, string>("issues")
                 .AddMongoRepository<UserDocument, Guid>("users")
                 .AddMongoRepository<CommentDocument, string>("comments")
+                .AddMongoRepository<HistoryDocument, Guid>("histories")
                 .AddWebApiSwaggerDocs()
                 .AddSecurity();
         }

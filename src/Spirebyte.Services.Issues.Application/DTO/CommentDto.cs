@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Components;
 using Spirebyte.Services.Issues.Core.Entities;
 
 namespace Spirebyte.Services.Issues.Application.DTO
@@ -14,23 +15,11 @@ namespace Spirebyte.Services.Issues.Application.DTO
         public Guid AuthorId { get; set; }
         public string Body { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
 
         public IEnumerable<Reaction> Reactions { get; set; }
-
-        public CommentDto()
-        {
-            
-        }
-
-        public CommentDto(string id, string issueId, string projectId, Guid authorId, string body, DateTime createdAt, IEnumerable<Reaction> reactions)
-        {
-            Id = id;
-            IssueId = issueId;
-            ProjectId = projectId;
-            AuthorId = authorId;
-            Body = body;
-            CreatedAt = createdAt;
-            Reactions = reactions;
-        }
     }
 }

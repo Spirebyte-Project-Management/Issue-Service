@@ -56,7 +56,7 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 
             var comments = documents.Where(filter).ToList();
 
-            return comments.Select(p => p.AsDto());
+            return comments.Select(p => p.AsDto(_appContext.Identity));
         }
 
         private async Task<bool> IsUserInProject(string projectId)

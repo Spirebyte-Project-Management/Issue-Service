@@ -6,6 +6,7 @@ using Spirebyte.Services.Issues.Core.Repositories;
 using System.Threading.Tasks;
 using Spirebyte.Services.Issues.Application.Events;
 using Spirebyte.Services.Issues.Application.Services.Interfaces;
+using Spirebyte.Services.Issues.Core.Enums;
 
 namespace Spirebyte.Services.Issues.Application.Commands.Handlers
 {
@@ -14,12 +15,14 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
         private readonly IIssueRepository _issueRepository;
         private readonly ILogger<UpdateIssueHandler> _logger;
         private readonly IMessageBroker _messageBroker;
+        private readonly IHistoryService _historyService;
 
-        public UpdateIssueHandler(IIssueRepository issueRepository, ILogger<UpdateIssueHandler> logger, IMessageBroker messageBroker)
+        public UpdateIssueHandler(IIssueRepository issueRepository, ILogger<UpdateIssueHandler> logger, IMessageBroker messageBroker, IHistoryService historyService)
         {
             _issueRepository = issueRepository;
             _logger = logger;
             _messageBroker = messageBroker;
+            _historyService = historyService;
         }
 
         public async Task HandleAsync(UpdateIssue command)
@@ -35,11 +38,12 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
                 throw new EpicNotFoundException(command.EpicId);
             }
 
-            issue = new Issue(issue.Id, command.Type, command.Status, command.Title, command.Description, command.StoryPoints, issue.ProjectId, command.EpicId, issue.SprintId, command.Assignees, command.LinkedIssues, issue.CreatedAt);
-            await _issueRepository.UpdateAsync(issue);
+            var newIssue = new Issue(issue.Id, command.Type, command.Status, command.Title, command.Description, command.StoryPoints, issue.ProjectId, command.EpicId, issue.SprintId, command.Assignees, command.LinkedIssues, issue.CreatedAt);
+            await _issueRepository.UpdateAsync(newIssue);
 
             _logger.LogInformation($"Updated issue with id: {issue.Id}.");
             await _messageBroker.PublishAsync(new IssueUpdated(issue.Id));
+            await _historyService.SaveHistory(issue, newIssue, HistoryTypes.Updated);
         }
     }
 }
