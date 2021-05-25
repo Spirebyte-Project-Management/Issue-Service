@@ -66,8 +66,8 @@ namespace Spirebyte.Services.Issues.Application.Services
                 {
                     case FieldTypes.Assignees:
                     case FieldTypes.LinkedIssues:
-                        var oldPropertyArray = ((IEnumerable<Guid>) oldProperty.GetValue(oldIssue)).ToArray();
-                        var newPropertyArray = ((IEnumerable<Guid>) oldProperty.GetValue(oldIssue)).ToArray();
+                        var oldPropertyArray = (((IEnumerable<Guid>) oldProperty.GetValue(oldIssue)) ?? Enumerable.Empty<Guid>()).ToArray();
+                        var newPropertyArray = (((IEnumerable<Guid>) matchingProperty.GetValue(newIssue)) ?? Enumerable.Empty<Guid>()).ToArray();
                         oldValue = string.Join(',', oldPropertyArray);
                         newValue = string.Join(',', newPropertyArray);
                         break;
