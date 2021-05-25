@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Spirebyte.Services.Issues.Core.Entities;
+using System;
 using System.Threading.Tasks;
-using Spirebyte.Services.Issues.Core.Entities;
 
 namespace Spirebyte.Services.Issues.Core.Repositories
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Spirebyte.Services.Issues.Application.DTO;
+﻿using Spirebyte.Services.Issues.Application.DTO;
 using Spirebyte.Services.Issues.Core.Entities;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers

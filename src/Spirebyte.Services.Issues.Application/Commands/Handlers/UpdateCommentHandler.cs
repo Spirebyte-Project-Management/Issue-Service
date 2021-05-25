@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.CQRS.Commands;
+﻿using Convey.CQRS.Commands;
 using Microsoft.Extensions.Logging;
 using Spirebyte.Services.Issues.Application.Events;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Entities;
-using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Application.Commands.Handlers
 {
@@ -34,7 +31,7 @@ namespace Spirebyte.Services.Issues.Application.Commands.Handlers
                 throw new CommentNotFoundException(command.Id);
             }
 
-            comment = new Comment(comment.Id, comment.IssueId, comment.ProjectId, comment.AuthorId, command.Body, comment.CreatedAt, DateTime.Now,  comment.Reactions);
+            comment = new Comment(comment.Id, comment.IssueId, comment.ProjectId, comment.AuthorId, command.Body, comment.CreatedAt, DateTime.Now, comment.Reactions);
             await _commentRepository.UpdateAsync(comment);
 
             _logger.LogInformation($"Updated comment with id: {comment.Id}.");

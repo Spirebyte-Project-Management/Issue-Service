@@ -1,9 +1,9 @@
-﻿using Spirebyte.Services.Issues.Core.Enums;
+﻿using Spirebyte.Services.Issues.Core.Attributes;
+using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Spirebyte.Services.Issues.Core.Attributes;
 
 namespace Spirebyte.Services.Issues.Core.Entities
 {

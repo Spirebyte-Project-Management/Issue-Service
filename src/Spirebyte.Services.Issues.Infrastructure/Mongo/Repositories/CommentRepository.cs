@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Convey.Persistence.MongoDB;
+﻿using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Repositories;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories
 {

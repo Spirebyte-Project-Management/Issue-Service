@@ -1,8 +1,8 @@
 ﻿using Convey.CQRS.Events;
 using Spirebyte.Services.Issues.Application.Exceptions;
+using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Repositories;
 using System.Threading.Tasks;
-using Spirebyte.Services.Issues.Application.Services.Interfaces;
 
 namespace Spirebyte.Services.Issues.Application.Events.External.Handlers
 {

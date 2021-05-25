@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Spirebyte.Services.Issues.Core.Enums
+﻿namespace Spirebyte.Services.Issues.Core.Enums
 {
     public enum FieldTypes
     {

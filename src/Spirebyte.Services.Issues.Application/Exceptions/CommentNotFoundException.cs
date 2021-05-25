@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Spirebyte.Services.Issues.Application.Exceptions.Base;
+﻿using Spirebyte.Services.Issues.Application.Exceptions.Base;
 
 namespace Spirebyte.Services.Issues.Application.Exceptions
 {

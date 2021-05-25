@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Exceptions;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Spirebyte.Services.Issues.Tests.Unit.Core.Entities

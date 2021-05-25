@@ -1,5 +1,4 @@
-﻿using Spirebyte.Services.Issues.Core.Entities;
-using Spirebyte.Services.Issues.Core.Enums;
+﻿using Spirebyte.Services.Issues.Core.Enums;
 using System;
 using System.Collections.Generic;
 

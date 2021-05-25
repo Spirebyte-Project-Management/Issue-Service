@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Spirebyte.Services.Issues.Core.Entities;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components;
-using Spirebyte.Services.Issues.Core.Entities;
 
 namespace Spirebyte.Services.Issues.Application.DTO
 {

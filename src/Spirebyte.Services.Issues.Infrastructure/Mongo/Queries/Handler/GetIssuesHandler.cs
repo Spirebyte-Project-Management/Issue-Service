@@ -45,16 +45,6 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
                 return Enumerable.Empty<IssueDto>();
             }
 
-            var identity = _appContext.Identity;
-            if (identity.IsAuthenticated)
-            {
-                var isInProject = await _projectsApiHttpClient.IsProjectUserAsync(query.ProjectId, identity.Id);
-                if (!isInProject)
-                {
-                    return Enumerable.Empty<IssueDto>();
-                }
-            }
-
             string[] sprintIssueIds = null;
             if (query.HasSprint != null)
             {

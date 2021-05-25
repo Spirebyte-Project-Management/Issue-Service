@@ -1,5 +1,4 @@
 ﻿
-using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using Spirebyte.Services.Issues.Application;
@@ -8,6 +7,7 @@ using Spirebyte.Services.Issues.Application.DTO;
 using Spirebyte.Services.Issues.Application.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
+using System.Threading.Tasks;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 {
@@ -38,16 +38,6 @@ namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler
 
             var project = await _projectRepository.GetAsync(issue.ProjectId);
             if (project == null) return null;
-
-            var identity = _appContext.Identity;
-            if (identity.IsAuthenticated)
-            {
-                var isInProject = await _projectsApiHttpClient.IsProjectUserAsync(project.Id, identity.Id);
-                if (!isInProject)
-                {
-                    return null;
-                }
-            }
 
             return comment.AsDto(_appContext.Identity);
         }

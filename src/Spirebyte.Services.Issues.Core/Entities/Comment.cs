@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Spirebyte.Services.Issues.Core.Exceptions;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using Spirebyte.Services.Issues.Core.Exceptions;
 
 namespace Spirebyte.Services.Issues.Core.Entities
 {
