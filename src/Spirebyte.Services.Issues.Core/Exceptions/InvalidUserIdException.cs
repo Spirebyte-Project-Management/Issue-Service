@@ -1,14 +1,13 @@
-﻿using Spirebyte.Services.Issues.Core.Exceptions.Base;
-using System;
+﻿using System;
+using Spirebyte.Services.Issues.Core.Exceptions.Base;
 
-namespace Spirebyte.Services.Issues.Core.Exceptions
+namespace Spirebyte.Services.Issues.Core.Exceptions;
+
+public class InvalidUserIdException : DomainException
 {
-    public class InvalidUserIdException : DomainException
+    public InvalidUserIdException(Guid userId) : base($"Invalid userId: {userId}.")
     {
-        public override string Code { get; } = "invalid_user_id";
-
-        public InvalidUserIdException(Guid userId) : base($"Invalid userId: {userId}.")
-        {
-        }
     }
+
+    public override string Code { get; } = "invalid_user_id";
 }

@@ -1,8 +1,7 @@
-﻿namespace Spirebyte.Services.Issues.Core.Enums
+﻿namespace Spirebyte.Services.Issues.Core.Enums;
+
+public enum HistoryTypes
 {
-    public enum HistoryTypes
-    {
-        Created,
-        Updated
-    }
+    Created,
+    Updated
 }

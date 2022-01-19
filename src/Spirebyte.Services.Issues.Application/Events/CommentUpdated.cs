@@ -1,15 +1,14 @@
 ﻿using Convey.CQRS.Events;
 
-namespace Spirebyte.Services.Issues.Application.Events
-{
-    [Contract]
-    public class CommentUpdated : IEvent
-    {
-        public string CommentId { get; }
+namespace Spirebyte.Services.Issues.Application.Events;
 
-        public CommentUpdated(string commentId)
-        {
-            CommentId = commentId;
-        }
+[Contract]
+public class CommentUpdated : IEvent
+{
+    public CommentUpdated(string commentId)
+    {
+        CommentId = commentId;
     }
+
+    public string CommentId { get; }
 }

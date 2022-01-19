@@ -1,8 +1,7 @@
-namespace Spirebyte.Services.Issues.Application
+namespace Spirebyte.Services.Issues.Application;
+
+public interface IAppContext
 {
-    public interface IAppContext
-    {
-        string RequestId { get; }
-        IIdentityContext Identity { get; }
-    }
+    string RequestId { get; }
+    IIdentityContext Identity { get; }
 }

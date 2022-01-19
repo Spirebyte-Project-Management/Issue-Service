@@ -1,74 +1,60 @@
-﻿using Spirebyte.Services.Issues.Core.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Spirebyte.Services.Issues.Core.Exceptions;
 
-namespace Spirebyte.Services.Issues.Core.Entities
+namespace Spirebyte.Services.Issues.Core.Entities;
+
+public class Comment
 {
-    public class Comment
+    public Comment(string id, string issueId, string projectId, Guid authorId, string body, DateTime createdAt,
+        IEnumerable<Reaction> reactions)
     {
-        public string Id { get; private set; }
-        public string IssueId { get; private set; }
-        public string ProjectId { get; private set; }
+        if (string.IsNullOrWhiteSpace(id)) throw new InvalidIdException(id);
 
-        public Guid AuthorId { get; private set; }
-        public string Body { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public DateTime UpdatedAt { get; private set; }
+        if (string.IsNullOrWhiteSpace(projectId)) throw new InvalidProjectIdException(projectId);
 
-        public IEnumerable<Reaction> Reactions { get; private set; }
+        if (string.IsNullOrWhiteSpace(issueId)) throw new InvalidIssueIdException(issueId);
 
-        public Comment(string id, string issueId, string projectId, Guid authorId, string body, DateTime createdAt, IEnumerable<Reaction> reactions)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new InvalidIdException(id);
-            }
+        if (authorId == Guid.Empty) throw new InvalidAuthorIdException(authorId);
 
-            if (string.IsNullOrWhiteSpace(projectId))
-            {
-                throw new InvalidProjectIdException(projectId);
-            }
+        if (string.IsNullOrWhiteSpace(body)) throw new InvalidBodyException(body);
 
-            if (string.IsNullOrWhiteSpace(issueId))
-            {
-                throw new InvalidIssueIdException(issueId);
-            }
-
-            if (authorId == Guid.Empty)
-            {
-                throw new InvalidAuthorIdException(authorId);
-            }
-
-            if (string.IsNullOrWhiteSpace(body))
-            {
-                throw new InvalidBodyException(body);
-            }
-
-            Id = id;
-            IssueId = issueId;
-            ProjectId = projectId;
-            AuthorId = authorId;
-            Body = body;
-            CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;
-            Reactions = reactions;
-        }
-
-        public Comment(string id, string issueId, string projectId, Guid authorId, string body, DateTime createdAt,
-            DateTime updatedAt, IEnumerable<Reaction> reactions) : this(id, issueId, projectId, authorId, body, createdAt, reactions)
-        {
-            UpdatedAt = updatedAt;
-        }
+        Id = id;
+        IssueId = issueId;
+        ProjectId = projectId;
+        AuthorId = authorId;
+        Body = body;
+        CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;
+        Reactions = reactions;
     }
 
-    public struct Reaction
+    public Comment(string id, string issueId, string projectId, Guid authorId, string body, DateTime createdAt,
+        DateTime updatedAt, IEnumerable<Reaction> reactions) : this(id, issueId, projectId, authorId, body, createdAt,
+        reactions)
     {
-        public string CharacterCode { get; private set; }
-        public Guid CommenterId { get; private set; }
+        UpdatedAt = updatedAt;
+    }
 
-        public Reaction(string characterCode, Guid commenterId)
-        {
-            CharacterCode = characterCode;
-            CommenterId = commenterId;
-        }
+    public string Id { get; }
+    public string IssueId { get; }
+    public string ProjectId { get; }
+
+    public Guid AuthorId { get; }
+    public string Body { get; }
+    public DateTime CreatedAt { get; }
+    public DateTime UpdatedAt { get; }
+
+    public IEnumerable<Reaction> Reactions { get; }
+}
+
+public struct Reaction
+{
+    public string CharacterCode { get; }
+    public Guid CommenterId { get; }
+
+    public Reaction(string characterCode, Guid commenterId)
+    {
+        CharacterCode = characterCode;
+        CommenterId = commenterId;
     }
 }

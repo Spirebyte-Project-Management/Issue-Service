@@ -1,17 +1,16 @@
 ﻿using Convey.CQRS.Commands;
 
-namespace Spirebyte.Services.Issues.Application.Commands
-{
-    [Contract]
-    public class UpdateComment : ICommand
-    {
-        public string Id { get; private set; }
-        public string Body { get; private set; }
+namespace Spirebyte.Services.Issues.Application.Commands;
 
-        public UpdateComment(string id, string body)
-        {
-            Id = id;
-            Body = body;
-        }
+[Contract]
+public class UpdateComment : ICommand
+{
+    public UpdateComment(string id, string body)
+    {
+        Id = id;
+        Body = body;
     }
+
+    public string Id { get; }
+    public string Body { get; }
 }

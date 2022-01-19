@@ -1,16 +1,15 @@
-﻿using Convey.CQRS.Queries;
+﻿using System.Collections.Generic;
+using Convey.CQRS.Queries;
 using Spirebyte.Services.Issues.Application.DTO;
-using System.Collections.Generic;
 
-namespace Spirebyte.Services.Issues.Application.Queries
+namespace Spirebyte.Services.Issues.Application.Queries;
+
+public class GetHistory : IQuery<IEnumerable<HistoryDto>>
 {
-    public class GetHistory : IQuery<IEnumerable<HistoryDto>>
+    public GetHistory(string? issueId)
     {
-        public string? IssueId { get; set; }
-
-        public GetHistory(string? issueId)
-        {
-            IssueId = issueId;
-        }
+        IssueId = issueId;
     }
+
+    public string? IssueId { get; set; }
 }

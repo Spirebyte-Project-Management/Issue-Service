@@ -1,28 +1,27 @@
-﻿using Convey.CQRS.Events;
+﻿using System.Threading.Tasks;
+using Convey.CQRS.Events;
 using Spirebyte.Services.Issues.Core.Repositories;
-using System.Threading.Tasks;
 
-namespace Spirebyte.Services.Issues.Application.Events.External.Handlers
+namespace Spirebyte.Services.Issues.Application.Events.External.Handlers;
+
+public class EndedSprintHandler : IEventHandler<EndedSprint>
 {
-    public class EndedSprintHandler : IEventHandler<EndedSprint>
+    private readonly IIssueRepository _issueRepository;
+
+
+    public EndedSprintHandler(IIssueRepository issueRepository)
     {
-        private readonly IIssueRepository _issueRepository;
+        _issueRepository = issueRepository;
+    }
 
+    public async Task HandleAsync(EndedSprint @event)
+    {
+        var issues = await _issueRepository.GetIssuesWithSprint(@event.SprintId);
 
-        public EndedSprintHandler(IIssueRepository issueRepository)
+        foreach (var issue in issues)
         {
-            _issueRepository = issueRepository;
-        }
-
-        public async Task HandleAsync(EndedSprint @event)
-        {
-            var issues = await _issueRepository.GetIssuesWithSprint(@event.SprintId);
-
-            foreach (var issue in issues)
-            {
-                issue.RemoveFromSprint();
-                await _issueRepository.UpdateAsync(issue);
-            }
+            issue.RemoveFromSprint();
+            await _issueRepository.UpdateAsync(issue);
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Spirebyte.Services.Issues.Application.Clients.Interfaces
+namespace Spirebyte.Services.Issues.Application.Clients.Interfaces;
+
+public interface ISprintsApiHttpClient
 {
-    public interface ISprintsApiHttpClient
-    {
-        Task<string[]> IssuesWithoutSprintForProject(string projectKey);
-    }
+    Task<string[]> IssuesWithoutSprintForProject(string projectKey);
 }

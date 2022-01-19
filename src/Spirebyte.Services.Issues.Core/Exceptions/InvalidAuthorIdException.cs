@@ -1,14 +1,13 @@
-﻿using Spirebyte.Services.Issues.Core.Exceptions.Base;
-using System;
+﻿using System;
+using Spirebyte.Services.Issues.Core.Exceptions.Base;
 
-namespace Spirebyte.Services.Issues.Core.Exceptions
+namespace Spirebyte.Services.Issues.Core.Exceptions;
+
+public class InvalidAuthorIdException : DomainException
 {
-    public class InvalidAuthorIdException : DomainException
+    public InvalidAuthorIdException(Guid authorId) : base($"Invalid authorId: {authorId}.")
     {
-        public override string Code { get; } = "invalid_author_id";
-
-        public InvalidAuthorIdException(Guid authorId) : base($"Invalid authorId: {authorId}.")
-        {
-        }
     }
+
+    public override string Code { get; } = "invalid_author_id";
 }

@@ -1,13 +1,12 @@
-﻿namespace Spirebyte.Services.Issues.Core.Enums
+﻿namespace Spirebyte.Services.Issues.Core.Enums;
+
+public enum FieldTypes
 {
-    public enum FieldTypes
-    {
-        String,
-        Status,
-        Type,
-        Assignees,
-        Epic,
-        Sprint,
-        LinkedIssues
-    }
+    String,
+    Status,
+    Type,
+    Assignees,
+    Epic,
+    Sprint,
+    LinkedIssues
 }

@@ -1,23 +1,29 @@
-﻿using Convey.Persistence.MongoDB;
+﻿using System;
+using System.Threading.Tasks;
+using Convey.Persistence.MongoDB;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Repositories;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
-using System;
-using System.Threading.Tasks;
 
-namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories
+namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories;
+
+internal sealed class UserRepository : IUserRepository
 {
-    internal sealed class UserRepository : IUserRepository
+    private readonly IMongoRepository<UserDocument, Guid> _repository;
+
+    public UserRepository(IMongoRepository<UserDocument, Guid> repository)
     {
-        private readonly IMongoRepository<UserDocument, Guid> _repository;
+        _repository = repository;
+    }
 
-        public UserRepository(IMongoRepository<UserDocument, Guid> repository)
-        {
-            _repository = repository;
-        }
+    public Task<bool> ExistsAsync(Guid id)
+    {
+        return _repository.ExistsAsync(c => c.Id == id);
+    }
 
-        public Task<bool> ExistsAsync(Guid id) => _repository.ExistsAsync(c => c.Id == id);
-        public Task AddAsync(User user) => _repository.AddAsync(user.AsDocument());
+    public Task AddAsync(User user)
+    {
+        return _repository.AddAsync(user.AsDocument());
     }
 }

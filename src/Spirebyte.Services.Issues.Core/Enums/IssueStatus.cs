@@ -1,9 +1,8 @@
-﻿namespace Spirebyte.Services.Issues.Core.Enums
+﻿namespace Spirebyte.Services.Issues.Core.Enums;
+
+public enum IssueStatus
 {
-    public enum IssueStatus
-    {
-        TODO,
-        INPROGRESS,
-        DONE,
-    }
+    TODO,
+    INPROGRESS,
+    DONE
 }

@@ -1,18 +1,17 @@
 ﻿using Convey.CQRS.Events;
 using Convey.MessageBrokers;
 
-namespace Spirebyte.Services.Issues.Application.Events.External
-{
-    [Message("sprints")]
-    public class RemovedIssueFromSprint : IEvent
-    {
-        public string SprintId { get; }
-        public string IssueId { get; }
+namespace Spirebyte.Services.Issues.Application.Events.External;
 
-        public RemovedIssueFromSprint(string sprintId, string issueId)
-        {
-            SprintId = sprintId;
-            IssueId = issueId;
-        }
+[Message("sprints")]
+public class RemovedIssueFromSprint : IEvent
+{
+    public RemovedIssueFromSprint(string sprintId, string issueId)
+    {
+        SprintId = sprintId;
+        IssueId = issueId;
     }
+
+    public string SprintId { get; }
+    public string IssueId { get; }
 }

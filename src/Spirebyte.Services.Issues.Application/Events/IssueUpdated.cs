@@ -1,15 +1,20 @@
 ﻿using Convey.CQRS.Events;
+using Spirebyte.Services.Issues.Core.Enums;
 
-namespace Spirebyte.Services.Issues.Application.Events
+namespace Spirebyte.Services.Issues.Application.Events;
+
+[Contract]
+public class IssueUpdated : IEvent
 {
-    [Contract]
-    public class IssueUpdated : IEvent
+    public IssueUpdated(string issueId, int storyPoints, IssueStatus status)
     {
-        public string IssueId { get; }
-
-        public IssueUpdated(string issueId)
-        {
-            IssueId = issueId;
-        }
+        IssueId = issueId;
+        StoryPoints = storyPoints;
+        Status = status;
     }
+
+    public string IssueId { get; }
+    public int StoryPoints { get; }
+
+    public IssueStatus Status { get; }
 }

@@ -1,4 +1,6 @@
-﻿using Convey.CQRS.Events;
+﻿using System;
+using System.Threading.Tasks;
+using Convey.CQRS.Events;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Issues.API;
@@ -9,73 +11,70 @@ using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 using Spirebyte.Services.Issues.Tests.Shared.Factories;
 using Spirebyte.Services.Issues.Tests.Shared.Fixtures;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Spirebyte.Services.Issues.Tests.Integration.Events
+namespace Spirebyte.Services.Issues.Tests.Integration.Events;
+
+[Collection("Spirebyte collection")]
+public class ProjectCreatedTests : IDisposable
 {
-    [Collection("Spirebyte collection")]
-    public class ProjectCreatedTests : IDisposable
+    private const string Exchange = "projects";
+    private readonly IEventHandler<ProjectCreated> _eventHandler;
+    private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
+    private readonly RabbitMqFixture _rabbitMqFixture;
+    private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
+
+    public ProjectCreatedTests(SpirebyteApplicationFactory<Program> factory)
     {
-        public ProjectCreatedTests(SpirebyteApplicationFactory<Program> factory)
-        {
-            _rabbitMqFixture = new RabbitMqFixture();
-            _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
-            _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
-            factory.Server.AllowSynchronousIO = true;
-            _eventHandler = factory.Services.GetRequiredService<IEventHandler<ProjectCreated>>();
-        }
+        _rabbitMqFixture = new RabbitMqFixture();
+        _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
+        _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
+        factory.Server.AllowSynchronousIO = true;
+        _eventHandler = factory.Services.GetRequiredService<IEventHandler<ProjectCreated>>();
+    }
 
-        public void Dispose()
-        {
-            _projectsMongoDbFixture.Dispose();
-            _usersMongoDbFixture.Dispose();
-        }
-
-        private const string Exchange = "projects";
-        private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
-        private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
-        private readonly RabbitMqFixture _rabbitMqFixture;
-        private readonly IEventHandler<ProjectCreated> _eventHandler;
+    public void Dispose()
+    {
+        _projectsMongoDbFixture.Dispose();
+        _usersMongoDbFixture.Dispose();
+    }
 
 
-        [Fact]
-        public async Task projectcreated_event_should_add_project_with_given_data_to_database()
-        {
-            var projectId = "projectKey";
+    [Fact]
+    public async Task projectcreated_event_should_add_project_with_given_data_to_database()
+    {
+        var projectId = "projectKey";
 
-            var externalEvent = new ProjectCreated(projectId);
+        var externalEvent = new ProjectCreated(projectId);
 
-            // Check if exception is thrown
+        // Check if exception is thrown
 
-            _eventHandler
-                .Awaiting(c => c.HandleAsync(externalEvent))
-                .Should().NotThrow();
-
-
-            var project = await _projectsMongoDbFixture.GetAsync(externalEvent.ProjectId);
-
-            project.Should().NotBeNull();
-            project.Id.Should().Be(projectId);
-        }
+        _eventHandler
+            .Awaiting(c => c.HandleAsync(externalEvent))
+            .Should().NotThrow();
 
 
-        [Fact]
-        public async Task projectcreated_event_fails_when_project_with_id_already_exists()
-        {
-            var projectId = "projectKey";
+        var project = await _projectsMongoDbFixture.GetAsync(externalEvent.ProjectId);
 
-            var project = new Project(projectId);
-            await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
+        project.Should().NotBeNull();
+        project.Id.Should().Be(projectId);
+    }
 
-            var externalEvent = new ProjectCreated(projectId);
 
-            // Check if exception is thrown
+    [Fact]
+    public async Task projectcreated_event_fails_when_project_with_id_already_exists()
+    {
+        var projectId = "projectKey";
 
-            _eventHandler
-                .Awaiting(c => c.HandleAsync(externalEvent))
-                .Should().Throw<ProjectAlreadyCreatedException>();
-        }
+        var project = new Project(projectId);
+        await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
+
+        var externalEvent = new ProjectCreated(projectId);
+
+        // Check if exception is thrown
+
+        _eventHandler
+            .Awaiting(c => c.HandleAsync(externalEvent))
+            .Should().Throw<ProjectAlreadyCreatedException>();
     }
 }

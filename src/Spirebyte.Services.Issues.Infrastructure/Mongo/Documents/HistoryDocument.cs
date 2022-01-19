@@ -1,17 +1,16 @@
-﻿using Convey.Types;
+﻿using System;
+using Convey.Types;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
-using System;
 
-namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents
+namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
+
+internal sealed class HistoryDocument : IIdentifiable<Guid>
 {
-    internal sealed class HistoryDocument : IIdentifiable<Guid>
-    {
-        public Guid Id { get; set; }
-        public string IssueId { get; set; }
-        public Guid UserId { get; set; }
-        public HistoryTypes Action { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public Field[] ChangedFields { get; set; }
-    }
+    public string IssueId { get; set; }
+    public Guid UserId { get; set; }
+    public HistoryTypes Action { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public Field[] ChangedFields { get; set; }
+    public Guid Id { get; set; }
 }

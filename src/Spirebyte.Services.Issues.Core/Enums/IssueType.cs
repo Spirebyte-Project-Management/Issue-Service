@@ -1,11 +1,10 @@
-﻿namespace Spirebyte.Services.Issues.Core.Enums
+﻿namespace Spirebyte.Services.Issues.Core.Enums;
+
+public enum IssueType
 {
-    public enum IssueType
-    {
-        Story,
-        Task,
-        SubTask,
-        Bug,
-        Epic
-    }
+    Story,
+    Task,
+    SubTask,
+    Bug,
+    Epic
 }

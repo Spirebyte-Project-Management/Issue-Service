@@ -1,13 +1,12 @@
 ﻿using Spirebyte.Services.Issues.Core.Exceptions.Base;
 
-namespace Spirebyte.Services.Issues.Core.Exceptions
-{
-    public class InvalidTitleException : DomainException
-    {
-        public override string Code { get; } = "invalid_title";
+namespace Spirebyte.Services.Issues.Core.Exceptions;
 
-        public InvalidTitleException(string title) : base($"Invalid title: {title}.")
-        {
-        }
+public class InvalidTitleException : DomainException
+{
+    public InvalidTitleException(string title) : base($"Invalid title: {title}.")
+    {
     }
+
+    public override string Code { get; } = "invalid_title";
 }

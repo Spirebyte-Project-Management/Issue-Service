@@ -1,11 +1,10 @@
-﻿using Spirebyte.Services.Issues.Core.Entities;
+﻿using System.Threading.Tasks;
+using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
-using System.Threading.Tasks;
 
-namespace Spirebyte.Services.Issues.Application.Services.Interfaces
+namespace Spirebyte.Services.Issues.Application.Services.Interfaces;
+
+public interface IHistoryService
 {
-    public interface IHistoryService
-    {
-        Task SaveHistory(Issue oldIssue, Issue newIssue, HistoryTypes action);
-    }
+    Task SaveHistory(Issue oldIssue, Issue newIssue, HistoryTypes action);
 }

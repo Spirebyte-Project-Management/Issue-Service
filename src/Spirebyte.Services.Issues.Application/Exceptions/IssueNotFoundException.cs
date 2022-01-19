@@ -1,15 +1,14 @@
 ﻿using Spirebyte.Services.Issues.Application.Exceptions.Base;
 
-namespace Spirebyte.Services.Issues.Application.Exceptions
-{
-    public class IssueNotFoundException : AppException
-    {
-        public override string Code { get; } = "issue_not_found";
-        public string IssueId { get; }
+namespace Spirebyte.Services.Issues.Application.Exceptions;
 
-        public IssueNotFoundException(string issueId) : base($"Issue with ID: '{issueId}' was not found.")
-        {
-            IssueId = issueId;
-        }
+public class IssueNotFoundException : AppException
+{
+    public IssueNotFoundException(string issueId) : base($"Issue with ID: '{issueId}' was not found.")
+    {
+        IssueId = issueId;
     }
+
+    public override string Code { get; } = "issue_not_found";
+    public string IssueId { get; }
 }

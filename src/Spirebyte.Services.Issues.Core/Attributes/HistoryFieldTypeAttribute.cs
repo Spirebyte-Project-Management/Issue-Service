@@ -1,15 +1,14 @@
-﻿using Spirebyte.Services.Issues.Core.Enums;
-using System;
+﻿using System;
+using Spirebyte.Services.Issues.Core.Enums;
 
-namespace Spirebyte.Services.Issues.Core.Attributes
+namespace Spirebyte.Services.Issues.Core.Attributes;
+
+public class HistoryFieldTypeAttribute : Attribute
 {
-    public class HistoryFieldTypeAttribute : Attribute
+    public HistoryFieldTypeAttribute(FieldTypes fieldType)
     {
-        public FieldTypes FieldType { get; }
-
-        public HistoryFieldTypeAttribute(FieldTypes fieldType)
-        {
-            FieldType = fieldType;
-        }
+        FieldType = fieldType;
     }
+
+    public FieldTypes FieldType { get; }
 }
