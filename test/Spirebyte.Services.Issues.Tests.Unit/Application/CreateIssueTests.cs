@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
 using NSubstitute;
-using Spirebyte.Services.Issues.Application;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
-using Spirebyte.Services.Issues.Application.Commands;
-using Spirebyte.Services.Issues.Application.Commands.Handlers;
+using Spirebyte.Services.Issues.Application.Contexts;
+using Spirebyte.Services.Issues.Application.Issues.Commands;
+using Spirebyte.Services.Issues.Application.Issues.Commands.Handlers;
+using Spirebyte.Services.Issues.Application.Issues.Services.Interfaces;
 using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Repositories;
@@ -19,6 +20,7 @@ public class CreateIssueTests
     private readonly ICommandHandler<CreateIssue> _handler;
     private readonly IHistoryService _historyService;
     private readonly IIssueRepository _issueRepository;
+    private readonly IIssueRequestStorage _issueRequestStorage;
     private readonly IMessageBroker _messageBroker;
 
     private readonly IProjectRepository _projectRepository;
@@ -32,9 +34,10 @@ public class CreateIssueTests
         _historyService = Substitute.For<IHistoryService>();
         _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
         _appContext = Substitute.For<IAppContext>();
+        _issueRequestStorage = Substitute.For<IIssueRequestStorage>();
 
         _handler = new CreateIssueHandler(_projectRepository, _issueRepository, _messageBroker, _historyService,
-            _projectsApiHttpClient, _appContext);
+            _projectsApiHttpClient, _appContext, _issueRequestStorage);
     }
 
     private Task Act(CreateIssue command)

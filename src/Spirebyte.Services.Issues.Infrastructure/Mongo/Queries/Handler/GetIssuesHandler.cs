@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
-using Spirebyte.Services.Issues.Application;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
-using Spirebyte.Services.Issues.Application.DTO;
-using Spirebyte.Services.Issues.Application.Queries;
+using Spirebyte.Services.Issues.Application.Contexts;
+using Spirebyte.Services.Issues.Application.Issues.DTO;
+using Spirebyte.Services.Issues.Application.Issues.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 
@@ -33,7 +34,7 @@ internal sealed class GetIssuesHandler : IQueryHandler<GetIssues, IEnumerable<Is
         _sprintsApiHttpClient = sprintsApiHttpClient;
     }
 
-    public async Task<IEnumerable<IssueDto>> HandleAsync(GetIssues query)
+    public async Task<IEnumerable<IssueDto>> HandleAsync(GetIssues query, CancellationToken cancellationToken = default)
     {
         var documents = _issueRepository.Collection.AsQueryable();
 

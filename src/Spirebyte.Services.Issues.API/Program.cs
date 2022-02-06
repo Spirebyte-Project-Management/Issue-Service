@@ -1,26 +1,15 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Convey;
-using Convey.CQRS.Queries;
 using Convey.Logging;
 using Convey.Secrets.Vault;
 using Convey.Types;
 using Convey.WebApi;
-using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Open.Serialization.Json;
-using Open.Serialization.Json.Newtonsoft;
 using Spirebyte.Services.Issues.Application;
-using Spirebyte.Services.Issues.Application.Commands;
-using Spirebyte.Services.Issues.Application.DTO;
-using Spirebyte.Services.Issues.Application.Queries;
-using Spirebyte.Services.Issues.Core.Repositories;
 using Spirebyte.Services.Issues.Infrastructure;
 
 namespace Spirebyte.Services.Issues.API;
@@ -34,54 +23,30 @@ public class Program
             .RunAsync();
     }
 
-    public static IJsonSerializer GetJsonSerializer()
-    {
-        var factory = new JsonSerializerFactory(new JsonSerializerSettings
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        });
-        return factory.GetSerializer();
-    }
-
     public static IWebHostBuilder CreateWebHostBuilder(string[] args)
     {
         return WebHost.CreateDefaultBuilder(args)
-            .ConfigureServices(services => services
-                .AddConvey()
-                .AddWebApi(jsonSerializer: GetJsonSerializer())
-                .AddApplication()
-                .AddInfrastructure()
-                .Build())
+            .ConfigureServices(services =>
+            {
+                services.AddControllers();
+                services
+                    .AddConvey()
+                    .AddWebApi()
+                    .AddApplication()
+                    .AddInfrastructure()
+                    .Build();
+            })
             .Configure(app => app
                 .UseInfrastructure()
+                .UseRouting()
+                .UseAuthorization()
                 .UsePingEndpoint()
-                .UseDispatcherEndpoints(endpoints => endpoints
-                    .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
-                    .Get<GetHistory, IEnumerable<HistoryDto>>("issues/history")
-                    .Get<GetComments, IEnumerable<CommentDto>>("issues/comments")
-                    .Get<GetComment, CommentDto>("issues/comments/{id}")
-                    .Put<UpdateComment>("issues/comments/{Id}")
-                    .Delete<DeleteComment>("issues/comments/{Id}")
-                    .Post<CreateComment>("issues/comments",
-                        afterDispatch: async (cmd, ctx) =>
-                        {
-                            var comment = await ctx.RequestServices.GetService<ICommentRepository>().GetLatest();
-                            await ctx.Response.Created($"issues/comments/{comment.Id}",
-                                await ctx.RequestServices.GetService<IQueryDispatcher>()
-                                    .QueryAsync<GetComment, CommentDto>(new GetComment(comment.Id)));
-                        })
-                    .Get<GetIssues, IEnumerable<IssueDto>>("issues")
-                    .Get<GetIssue, IssueDto>("issues/{id}")
-                    .Put<UpdateIssue>("issues/{IssueId}")
-                    .Delete<DeleteIssue>("issues/{IssueId}")
-                    .Post<CreateIssue>("issues",
-                        afterDispatch: async (cmd, ctx) =>
-                        {
-                            var issue = await ctx.RequestServices.GetService<IIssueRepository>().GetLatest();
-                            await ctx.Response.Created($"issues/{issue.Id}",
-                                await ctx.RequestServices.GetService<IQueryDispatcher>()
-                                    .QueryAsync<GetIssue, IssueDto>(new GetIssue(issue.Id)));
-                        })
+                .UseEndpoints(endpoints =>
+                    {
+                        endpoints.MapGet("",
+                            ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>()?.Name!));
+                        endpoints.MapControllers();
+                    }
                 ))
             .UseLogging()
             .UseVault();

@@ -4,8 +4,8 @@ using Convey.CQRS.Queries;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Issues.API;
-using Spirebyte.Services.Issues.Application.DTO;
-using Spirebyte.Services.Issues.Application.Queries;
+using Spirebyte.Services.Issues.Application.Issues.DTO;
+using Spirebyte.Services.Issues.Application.Issues.Queries;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
@@ -71,7 +71,7 @@ public class GetIssueTests : IDisposable
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 
-        requestResult.Should().NotThrow();
+        await requestResult.Should().NotThrowAsync();
 
         var result = await requestResult();
 
@@ -101,7 +101,7 @@ public class GetIssueTests : IDisposable
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 
-        requestResult.Should().NotThrow();
+        await requestResult.Should().NotThrowAsync();
 
         var result = await requestResult();
         result.Should().BeNull();
@@ -131,7 +131,7 @@ public class GetIssueTests : IDisposable
         var requestResult = _queryHandler
             .Awaiting(c => c.HandleAsync(query));
 
-        requestResult.Should().NotThrow();
+        await requestResult.Should().NotThrowAsync();
 
         var result = await requestResult();
         result.Should().BeNull();

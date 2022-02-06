@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Issues.Application.DTO;
+﻿using Spirebyte.Services.Issues.Application.Issues.DTO;
 using Spirebyte.Services.Issues.Core.Entities;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;

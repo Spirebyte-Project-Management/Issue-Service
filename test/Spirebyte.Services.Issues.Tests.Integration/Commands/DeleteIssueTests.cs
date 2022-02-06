@@ -4,8 +4,8 @@ using Convey.CQRS.Commands;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Issues.API;
-using Spirebyte.Services.Issues.Application.Commands;
-using Spirebyte.Services.Issues.Application.Exceptions;
+using Spirebyte.Services.Issues.Application.Issues.Commands;
+using Spirebyte.Services.Issues.Application.Issues.Exceptions;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
@@ -65,9 +65,9 @@ public class DeleteIssueTests : IDisposable
 
         // Check if exception is thrown
 
-        _commandHandler
+        await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
-            .Should().NotThrow();
+            .Should().NotThrowAsync();
 
 
         var updatedIssue = await _issuesMongoDbFixture.GetAsync(issueId);
@@ -84,8 +84,8 @@ public class DeleteIssueTests : IDisposable
 
         // Check if exception is thrown
 
-        _commandHandler
+        await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
-            .Should().Throw<IssueNotFoundException>();
+            .Should().ThrowAsync<IssueNotFoundException>();
     }
 }

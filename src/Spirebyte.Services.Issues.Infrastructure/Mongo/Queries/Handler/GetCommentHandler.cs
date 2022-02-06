@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
-using Spirebyte.Services.Issues.Application;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
-using Spirebyte.Services.Issues.Application.DTO;
-using Spirebyte.Services.Issues.Application.Queries;
+using Spirebyte.Services.Issues.Application.Contexts;
+using Spirebyte.Services.Issues.Application.IssueComments.DTO;
+using Spirebyte.Services.Issues.Application.IssueComments.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 
@@ -30,7 +31,7 @@ internal sealed class GetCommentHandler : IQueryHandler<GetComment, CommentDto>
         _projectsApiHttpClient = projectsApiHttpClient;
     }
 
-    public async Task<CommentDto> HandleAsync(GetComment query)
+    public async Task<CommentDto> HandleAsync(GetComment query, CancellationToken cancellationToken = default)
     {
         var comment = await _commentRepository.GetAsync(query.Id);
         if (comment == null) return null;

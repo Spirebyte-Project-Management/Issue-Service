@@ -4,8 +4,8 @@ using Convey.CQRS.Events;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Issues.API;
-using Spirebyte.Services.Issues.Application.Events.External;
 using Spirebyte.Services.Issues.Application.Exceptions;
+using Spirebyte.Services.Issues.Application.Projects.Events.External;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
@@ -45,13 +45,13 @@ public class ProjectCreatedTests : IDisposable
     {
         var projectId = "projectKey";
 
-        var externalEvent = new ProjectCreated(projectId);
+        var externalEvent = new ProjectCreated { ProjectId = projectId };
 
         // Check if exception is thrown
 
-        _eventHandler
+        await _eventHandler
             .Awaiting(c => c.HandleAsync(externalEvent))
-            .Should().NotThrow();
+            .Should().NotThrowAsync();
 
 
         var project = await _projectsMongoDbFixture.GetAsync(externalEvent.ProjectId);
@@ -69,12 +69,12 @@ public class ProjectCreatedTests : IDisposable
         var project = new Project(projectId);
         await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
-        var externalEvent = new ProjectCreated(projectId);
+        var externalEvent = new ProjectCreated { ProjectId = projectId };
 
         // Check if exception is thrown
 
-        _eventHandler
+        await _eventHandler
             .Awaiting(c => c.HandleAsync(externalEvent))
-            .Should().Throw<ProjectAlreadyCreatedException>();
+            .Should().ThrowAsync<ProjectAlreadyCreatedException>();
     }
 }
