@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Convey.Persistence.MongoDB;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
-using Spirebyte.Services.Issues.Application.Contexts;
 using Spirebyte.Services.Issues.Application.Issues.DTO;
 using Spirebyte.Services.Issues.Application.Issues.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
+using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler;
 

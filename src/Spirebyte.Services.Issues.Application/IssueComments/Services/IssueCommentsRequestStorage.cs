@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
-using Spirebyte.Services.Issues.Application.Contexts;
 using Spirebyte.Services.Issues.Application.IssueComments.DTO;
 using Spirebyte.Services.Issues.Application.IssueComments.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Entities;
+using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Application.IssueComments.Services;
 

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using Spirebyte.Services.Issues.Application.Contexts;
 using Spirebyte.Services.Issues.Application.IssueComments.DTO;
 using Spirebyte.Services.Issues.Core.Entities;
+using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 

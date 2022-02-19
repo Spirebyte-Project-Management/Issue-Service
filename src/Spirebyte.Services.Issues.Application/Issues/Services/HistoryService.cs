@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Spirebyte.Services.Issues.Application.Contexts;
 using Spirebyte.Services.Issues.Application.Issues.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Attributes;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Exceptions;
 using Spirebyte.Services.Issues.Core.Repositories;
+using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Services;
 
@@ -24,9 +24,9 @@ internal sealed class HistoryService : IHistoryService
         _appContext = appContext;
     }
 
-    public async Task SaveHistory(Issue oldIssue, Issue newIssue, HistoryTypes action)
+    public async Task SaveHistory(Issue? oldIssue, Issue newIssue, HistoryTypes action)
     {
-        if (oldIssue == null) oldIssue = Issue.Empty;
+        oldIssue ??= Issue.Empty;
 
         if (newIssue == null) throw new ArgumentNullException(nameof(newIssue));
 

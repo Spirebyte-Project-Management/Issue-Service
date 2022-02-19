@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using Convey.CQRS.Commands;
 using NSubstitute;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
-using Spirebyte.Services.Issues.Application.Contexts;
 using Spirebyte.Services.Issues.Application.Issues.Commands;
 using Spirebyte.Services.Issues.Application.Issues.Commands.Handlers;
 using Spirebyte.Services.Issues.Application.Issues.Services.Interfaces;
 using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Repositories;
+using Spirebyte.Shared.Contexts.Interfaces;
 using Xunit;
 
 namespace Spirebyte.Services.Issues.Tests.Unit.Application;

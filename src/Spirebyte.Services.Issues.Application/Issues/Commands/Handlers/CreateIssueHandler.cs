@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
-using Spirebyte.Services.Issues.Application.Contexts;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Application.Issues.Events;
 using Spirebyte.Services.Issues.Application.Issues.Exceptions;
@@ -12,6 +11,7 @@ using Spirebyte.Services.Issues.Core.Constants;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Repositories;
+using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Commands.Handlers;
 
