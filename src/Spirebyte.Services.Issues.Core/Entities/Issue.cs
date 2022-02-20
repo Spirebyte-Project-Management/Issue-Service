@@ -35,9 +35,7 @@ public class Issue
         EpicId = epicId;
         SprintId = sprintId;
         Assignees = assignees ??= Enumerable.Empty<Guid>();
-        ;
         LinkedIssues = linkedIssues ??= Enumerable.Empty<Guid>();
-        ;
         CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;
     }
 

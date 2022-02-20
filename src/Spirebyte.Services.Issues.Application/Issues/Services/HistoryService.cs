@@ -60,15 +60,15 @@ internal sealed class HistoryService : IHistoryService
                 case FieldTypes.Assignees:
                 case FieldTypes.LinkedIssues:
                     var oldPropertyArray =
-                        ((IEnumerable<Guid>)oldProperty.GetValue(oldIssue)!).ToArray();
+                        ((IEnumerable<Guid>)oldProperty.GetValue(oldIssue) ?? Array.Empty<Guid>()).ToArray();
                     var newPropertyArray =
-                        ((IEnumerable<Guid>)matchingProperty.GetValue(newIssue)!).ToArray();
+                        ((IEnumerable<Guid>)matchingProperty.GetValue(newIssue) ?? Array.Empty<Guid>()).ToArray();
                     oldValue = string.Join(',', oldPropertyArray);
                     newValue = string.Join(',', newPropertyArray);
                     break;
                 default:
-                    oldValue = oldProperty.GetValue(oldIssue)?.ToString();
-                    newValue = matchingProperty.GetValue(newIssue)?.ToString();
+                    oldValue = oldProperty.GetValue(oldIssue)?.ToString() ?? string.Empty;
+                    newValue = matchingProperty.GetValue(newIssue)?.ToString() ?? string.Empty;
                     break;
             }
 

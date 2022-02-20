@@ -50,7 +50,6 @@ public class CreateIssuesTests : IDisposable
     {
         var projectId = "projectkey";
         var epicId = string.Empty;
-        var issueId = string.Empty;
         var title = "Title";
         var description = "description";
         var type = IssueType.Story;
@@ -63,7 +62,7 @@ public class CreateIssuesTests : IDisposable
         await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-        var command = new CreateIssue(issueId, type, status, title, description, storypoints, projectId, epicId, null,
+        var command = new CreateIssue(type, status, title, description, storypoints, projectId, epicId, null,
             null, DateTime.Now);
 
         // Check if exception is thrown
@@ -97,7 +96,7 @@ public class CreateIssuesTests : IDisposable
         var status = IssueStatus.TODO;
         var storypoints = 0;
 
-        var command = new CreateIssue(issueId, type, status, title, description, storypoints, projectId, epicId, null,
+        var command = new CreateIssue(type, status, title, description, storypoints, projectId, epicId, null,
             null, DateTime.Now);
 
         // Check if exception is thrown
@@ -123,7 +122,7 @@ public class CreateIssuesTests : IDisposable
         await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
 
-        var command = new CreateIssue(issueId, type, status, title, description, storypoints, projectId, epicId, null,
+        var command = new CreateIssue(type, status, title, description, storypoints, projectId, epicId, null,
             null, DateTime.Now);
 
         // Check if exception is thrown

@@ -58,7 +58,7 @@ public static class Extensions
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
 
-        return builder
+        builder
             .AddErrorHandler<ExceptionToResponseMapper>()
             .AddQueryHandlers()
             .AddInMemoryQueryDispatcher()
@@ -80,6 +80,10 @@ public static class Extensions
             .AddMongoRepository<HistoryDocument, Guid>("histories")
             .AddWebApiSwaggerDocs()
             .AddSecurity();
+
+        builder.Services.AddCorrelationContextFactories();
+        
+        return builder;
     }
 
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)

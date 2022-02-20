@@ -60,7 +60,7 @@ public class CreateIssueTests
         _projectRepository.ExistsAsync(projectId).Returns(true);
         _projectsApiHttpClient.HasPermission(default, default, default).ReturnsForAnyArgs(true);
 
-        var command = new CreateIssue(issueId, type, status, title, description, storypoints, projectId, epicId, null,
+        var command = new CreateIssue(type, status, title, description, storypoints, projectId, epicId, null,
             null, DateTime.Now);
         await Act(command);
 
