@@ -26,7 +26,5 @@ public class RemovedIssueFromSprintHandler : IEventHandler<RemovedIssueFromSprin
         var issue = await _issueRepository.GetAsync(@event.IssueId);
         issue.RemoveFromSprint();
         await _issueRepository.UpdateAsync(issue);
-
-        await _messageBroker.PublishAsync(new IssueUpdated(issue.Id, issue.StoryPoints, issue.Status));
     }
 }

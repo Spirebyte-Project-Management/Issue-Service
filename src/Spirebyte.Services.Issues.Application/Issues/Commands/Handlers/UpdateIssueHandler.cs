@@ -54,7 +54,7 @@ internal sealed class UpdateIssueHandler : ICommandHandler<UpdateIssue>
         await _issueRepository.UpdateAsync(newIssue);
 
         _logger.LogInformation($"Updated issue with id: {issue.Id}.");
-        await _messageBroker.PublishAsync(new IssueUpdated(issue.Id, newIssue.StoryPoints, newIssue.Status));
+        await _messageBroker.PublishAsync(new IssueUpdated(newIssue, issue));
         await _historyService.SaveHistory(issue, newIssue, HistoryTypes.Updated);
     }
 }

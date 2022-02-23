@@ -45,7 +45,7 @@ public class ProjectCreatedTests : IDisposable
     {
         var projectId = "projectKey";
 
-        var externalEvent = new ProjectCreated { ProjectId = projectId };
+        var externalEvent = new ProjectCreated { Id = projectId };
 
         // Check if exception is thrown
 
@@ -54,7 +54,7 @@ public class ProjectCreatedTests : IDisposable
             .Should().NotThrowAsync();
 
 
-        var project = await _projectsMongoDbFixture.GetAsync(externalEvent.ProjectId);
+        var project = await _projectsMongoDbFixture.GetAsync(externalEvent.Id);
 
         project.Should().NotBeNull();
         project.Id.Should().Be(projectId);
@@ -69,7 +69,7 @@ public class ProjectCreatedTests : IDisposable
         var project = new Project(projectId);
         await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
 
-        var externalEvent = new ProjectCreated { ProjectId = projectId };
+        var externalEvent = new ProjectCreated { Id = projectId };
 
         // Check if exception is thrown
 

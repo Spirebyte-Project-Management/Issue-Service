@@ -58,7 +58,7 @@ internal sealed class CreateIssueHandler : ICommandHandler<CreateIssue>
             command.StoryPoints, command.ProjectId, command.EpicId, null, command.Assignees, command.LinkedIssues,
             command.CreatedAt);
         await _issueRepository.AddAsync(issue);
-        await _messageBroker.PublishAsync(new IssueCreated(issue.Id, issue.ProjectId, issue.StoryPoints));
+        await _messageBroker.PublishAsync(new IssueCreated(issue));
 
         await _historyService.SaveHistory(Issue.Empty, issue, HistoryTypes.Created);
 

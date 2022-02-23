@@ -42,6 +42,6 @@ internal sealed class DeleteIssueHandler : ICommandHandler<DeleteIssue>
         await _issueRepository.DeleteAsync(issue.Id);
 
         _logger.LogInformation($"Deleted issue with id: {issue.Id}.");
-        await _messageBroker.PublishAsync(new IssueDeleted(issue.Id, issue.ProjectId));
+        await _messageBroker.PublishAsync(new IssueDeleted(issue));
     }
 }

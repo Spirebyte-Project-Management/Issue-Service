@@ -31,7 +31,5 @@ public class AddedIssueToSprintHandler : IEventHandler<AddedIssueToSprint>
         var issue = await _issueRepository.GetAsync(@event.IssueId);
         issue.AddToSprint(@event.SprintId);
         await _issueRepository.UpdateAsync(issue);
-
-        await _messageBroker.PublishAsync(new IssueUpdated(issue.Id, issue.StoryPoints, issue.Status));
     }
 }

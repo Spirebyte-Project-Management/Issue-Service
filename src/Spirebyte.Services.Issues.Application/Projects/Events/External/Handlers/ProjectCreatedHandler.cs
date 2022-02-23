@@ -19,10 +19,10 @@ public class ProjectCreatedHandler : IEventHandler<ProjectCreated>
 
     public async Task HandleAsync(ProjectCreated @event, CancellationToken cancellationToken = default)
     {
-        if (await _projectRepository.ExistsAsync(@event.ProjectId))
-            throw new ProjectAlreadyCreatedException(@event.ProjectId);
+        if (await _projectRepository.ExistsAsync(@event.Id))
+            throw new ProjectAlreadyCreatedException(@event.Id);
 
-        var project = new Project(@event.ProjectId);
+        var project = new Project(@event.Id);
         await _projectRepository.AddAsync(project);
     }
 }
