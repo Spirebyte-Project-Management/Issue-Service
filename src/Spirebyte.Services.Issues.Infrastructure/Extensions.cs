@@ -36,6 +36,7 @@ using Spirebyte.Services.Issues.Infrastructure.Decorators;
 using Spirebyte.Services.Issues.Infrastructure.Exceptions;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories;
+using Spirebyte.Services.Issues.Infrastructure.ServiceDiscovery;
 using Spirebyte.Services.Issues.Infrastructure.Services;
 using Spirebyte.Shared.Contexts;
 
@@ -66,7 +67,7 @@ public static class Extensions
             .AddInMemoryDispatcher()
             .AddJwt()
             .AddHttpClient()
-            .AddConsul()
+            .AddCustomConsul()
             .AddFabio()
             .AddMetrics()
             .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
