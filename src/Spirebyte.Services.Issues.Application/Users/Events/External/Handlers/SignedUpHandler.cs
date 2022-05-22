@@ -9,7 +9,6 @@ namespace Spirebyte.Services.Issues.Application.Users.Events.External.Handlers;
 
 public class SignedUpHandler : IEventHandler<SignedUp>
 {
-    private const string RequiredRole = "user";
     private readonly IUserRepository _userRepository;
 
 
@@ -20,8 +19,6 @@ public class SignedUpHandler : IEventHandler<SignedUp>
 
     public async Task HandleAsync(SignedUp @event, CancellationToken cancellationToken = default)
     {
-        if (@event.Role != RequiredRole) throw new InvalidRoleException(@event.UserId, @event.Role, RequiredRole);
-
         if (await _userRepository.ExistsAsync(@event.UserId)) throw new UserAlreadyCreatedException(@event.UserId);
 
         var user = new User(@event.UserId);

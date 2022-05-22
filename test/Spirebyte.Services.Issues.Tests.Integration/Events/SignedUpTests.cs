@@ -42,10 +42,9 @@ public class SignedUpTests : IDisposable
     {
         var userId = Guid.NewGuid();
         var email = "email@test.com";
-        var role = "user";
 
 
-        var externalEvent = new SignedUp(userId, email, role);
+        var externalEvent = new SignedUp(userId, email);
 
         // Check if exception is thrown
 
@@ -65,10 +64,9 @@ public class SignedUpTests : IDisposable
     {
         var userId = Guid.NewGuid();
         var email = "email@test.com";
-        var role = "none";
 
 
-        var externalEvent = new SignedUp(userId, email, role);
+        var externalEvent = new SignedUp(userId, email);
 
         // Check if exception is thrown
 
@@ -82,12 +80,11 @@ public class SignedUpTests : IDisposable
     {
         var userId = Guid.NewGuid();
         var email = "email@test.com";
-        var role = "user";
 
         var user = new User(userId);
         await _usersMongoDbFixture.InsertAsync(user.AsDocument());
 
-        var externalEvent = new SignedUp(userId, email, role);
+        var externalEvent = new SignedUp(userId, email);
 
         // Check if exception is thrown
 

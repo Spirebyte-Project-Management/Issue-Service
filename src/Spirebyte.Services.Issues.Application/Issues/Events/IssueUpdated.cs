@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Convey.CQRS.Events;
-using Spirebyte.Services.Activities.Core.ValueObjects;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Shared.Changes;
+using Spirebyte.Shared.Changes.ValueObjects;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Events;
 
