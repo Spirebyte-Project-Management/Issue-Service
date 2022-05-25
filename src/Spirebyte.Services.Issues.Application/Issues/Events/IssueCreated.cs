@@ -9,7 +9,9 @@ namespace Spirebyte.Services.Issues.Application.Issues.Events;
 [Contract]
 public class IssueCreated : IEvent
 {
-    public IssueCreated(string id, IssueType type, IssueStatus status, string title, string description, int storyPoints, string projectId, string epicId, string sprintId, IEnumerable<Guid> assignees, IEnumerable<Guid> linkedIssues, DateTime createdAt)
+    public IssueCreated(string id, IssueType type, IssueStatus status, string title, string description,
+        int storyPoints, string projectId, string epicId, string sprintId, IEnumerable<Guid> assignees,
+        IEnumerable<Guid> linkedIssues, DateTime createdAt)
     {
         Id = id;
         Type = type;

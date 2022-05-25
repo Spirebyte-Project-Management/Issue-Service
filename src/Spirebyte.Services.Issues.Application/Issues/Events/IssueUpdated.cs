@@ -11,7 +11,9 @@ namespace Spirebyte.Services.Issues.Application.Issues.Events;
 [Contract]
 public class IssueUpdated : IEvent
 {
-    public IssueUpdated(string id, IssueType type, IssueStatus status, string title, string description, int storyPoints, string projectId, string epicId, string sprintId, IEnumerable<Guid> assignees, IEnumerable<Guid> linkedIssues, DateTime createdAt)
+    public IssueUpdated(string id, IssueType type, IssueStatus status, string title, string description,
+        int storyPoints, string projectId, string epicId, string sprintId, IEnumerable<Guid> assignees,
+        IEnumerable<Guid> linkedIssues, DateTime createdAt)
     {
         Id = id;
         Type = type;
@@ -59,6 +61,6 @@ public class IssueUpdated : IEvent
     public IEnumerable<Guid> LinkedIssues { get; set; }
 
     public DateTime CreatedAt { get; set; }
-    
+
     public Change[] Changes { get; set; }
 }
