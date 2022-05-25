@@ -2,7 +2,7 @@
 
 namespace Spirebyte.Services.Issues.Application.Exceptions;
 
-public class ActionNotAllowedException : AppException
+public class ActionNotAllowedException : AuthorizationException
 {
     public ActionNotAllowedException()
         : base("You do not have the permissions to perform this action")
