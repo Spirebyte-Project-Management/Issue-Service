@@ -8,6 +8,7 @@ using Spirebyte.Services.Issues.Application.Issues.Commands;
 using Spirebyte.Services.Issues.Application.Issues.DTO;
 using Spirebyte.Services.Issues.Application.Issues.Queries;
 using Spirebyte.Services.Issues.Application.Issues.Services.Interfaces;
+using Spirebyte.Services.Issues.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Issues.API.Controllers;
@@ -25,6 +26,7 @@ public class IssuesController : BaseController
     }
 
     [HttpGet]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Browse issues")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -35,6 +37,7 @@ public class IssuesController : BaseController
     }
 
     [HttpGet("{issueId}")]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Get issue")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -46,6 +49,7 @@ public class IssuesController : BaseController
     }
 
     [HttpPost]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Create issue")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -57,6 +61,7 @@ public class IssuesController : BaseController
     }
 
     [HttpPut("{issueId}")]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Update issue")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -69,6 +74,7 @@ public class IssuesController : BaseController
     }
 
     [HttpDelete("{issueId}")]
+    [Authorize(ApiScopes.Delete)]
     [SwaggerOperation("Delete issue")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

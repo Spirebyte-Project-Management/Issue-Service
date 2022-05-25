@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Spirebyte.Services.Issues.API.Controllers.Base;
 using Spirebyte.Services.Issues.Application.Issues.DTO;
 using Spirebyte.Services.Issues.Application.Issues.Queries;
+using Spirebyte.Services.Issues.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Issues.API.Controllers;
@@ -22,6 +23,7 @@ public class IssuesHistoryController : BaseController
     }
 
     [HttpGet]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Browse issue history")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

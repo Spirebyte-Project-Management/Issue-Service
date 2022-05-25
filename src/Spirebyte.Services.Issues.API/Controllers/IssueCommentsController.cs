@@ -9,6 +9,7 @@ using Spirebyte.Services.Issues.Application.IssueComments.Commands;
 using Spirebyte.Services.Issues.Application.IssueComments.DTO;
 using Spirebyte.Services.Issues.Application.IssueComments.Queries;
 using Spirebyte.Services.Issues.Application.IssueComments.Services.Interfaces;
+using Spirebyte.Services.Issues.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Issues.API.Controllers;
@@ -27,6 +28,7 @@ public class IssuesCommentsController : BaseController
     }
 
     [HttpGet]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Browse issue comments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -37,6 +39,7 @@ public class IssuesCommentsController : BaseController
     }
 
     [HttpGet("{commentId}")]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Get issue comment")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,6 +51,7 @@ public class IssuesCommentsController : BaseController
     }
 
     [HttpPost]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Create issue comment")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -59,6 +63,7 @@ public class IssuesCommentsController : BaseController
     }
 
     [HttpPut("{commentId}")]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Update issue comment")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -71,6 +76,7 @@ public class IssuesCommentsController : BaseController
     }
 
     [HttpDelete("{commentId}")]
+    [Authorize(ApiScopes.Delete)]
     [SwaggerOperation("Delete issue comment")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
