@@ -1,5 +1,5 @@
 ﻿using System;
-using Spirebyte.Services.Issues.Application.Exceptions.Base;
+using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Issues.Application.Exceptions;
 
@@ -10,7 +10,5 @@ public class UserAlreadyCreatedException : AppException
     {
         UserId = userId;
     }
-
-    public override string Code { get; } = "user_already_created";
     public Guid UserId { get; }
 }

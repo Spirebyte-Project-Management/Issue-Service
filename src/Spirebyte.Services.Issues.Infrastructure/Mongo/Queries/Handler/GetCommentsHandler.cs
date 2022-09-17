@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Queries;
-using Convey.Persistence.MongoDB;
 using MongoDB.Driver;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.DAL.MongoDb.Interfaces;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.IssueComments.DTO;
 using Spirebyte.Services.Issues.Application.IssueComments.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler;
 
 internal sealed class GetCommentsHandler : IQueryHandler<GetComments, IEnumerable<CommentDto>>
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IMongoRepository<CommentDocument, string> _commentRepository;
     private readonly IMongoRepository<IssueDocument, string> _issueRepository;
     private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
@@ -25,13 +25,13 @@ internal sealed class GetCommentsHandler : IQueryHandler<GetComments, IEnumerabl
 
     public GetCommentsHandler(IMongoRepository<IssueDocument, string> issueRepository,
         IMongoRepository<ProjectDocument, string> projectRepository,
-        IMongoRepository<CommentDocument, string> commentRepository, IAppContext appContext,
+        IMongoRepository<CommentDocument, string> commentRepository, IContextAccessor contextAccessor,
         IProjectsApiHttpClient projectsApiHttpClient)
     {
         _issueRepository = issueRepository;
         _projectRepository = projectRepository;
         _commentRepository = commentRepository;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
         _projectsApiHttpClient = projectsApiHttpClient;
     }
 
@@ -55,6 +55,6 @@ internal sealed class GetCommentsHandler : IQueryHandler<GetComments, IEnumerabl
 
         var comments = documents.Where(filter).ToList();
 
-        return comments.Select(p => p.AsDto(_appContext.Identity));
+        return comments.Select(p => p.AsDto(_contextAccessor.Context.GetUserId()));
     }
 }

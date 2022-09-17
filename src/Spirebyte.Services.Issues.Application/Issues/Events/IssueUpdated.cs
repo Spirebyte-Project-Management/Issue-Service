@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Shared.Changes;
@@ -8,7 +9,7 @@ using Spirebyte.Shared.Changes.ValueObjects;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Events;
 
-[Contract]
+[Message("issues", "issue_updated")]
 public class IssueUpdated : IEvent
 {
     public IssueUpdated(string id, IssueType type, IssueStatus status, string title, string description,

@@ -1,10 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using Microsoft.Extensions.Logging;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Application.IssueComments.Events;
-using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Repositories;
 
 namespace Spirebyte.Services.Issues.Application.IssueComments.Commands.Handlers;
@@ -31,6 +31,6 @@ internal sealed class DeleteCommentHandler : ICommandHandler<DeleteComment>
         await _commentRepository.DeleteAsync(comment.Id);
 
         _logger.LogInformation($"Deleted comment with id: {comment.Id}.");
-        await _messageBroker.PublishAsync(new CommentDeleted(comment.Id, comment.IssueId));
+        await _messageBroker.SendAsync(new CommentDeleted(comment.Id, comment.IssueId), cancellationToken);
     }
 }

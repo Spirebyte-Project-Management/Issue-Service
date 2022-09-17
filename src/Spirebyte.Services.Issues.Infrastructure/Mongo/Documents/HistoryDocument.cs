@@ -1,11 +1,11 @@
 ﻿using System;
-using Convey.Types;
+using Spirebyte.Framework.Shared.Types;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 
-internal sealed class HistoryDocument : IIdentifiable<Guid>
+public sealed class HistoryDocument : IIdentifiable<Guid>
 {
     public string IssueId { get; set; }
     public Guid UserId { get; set; }

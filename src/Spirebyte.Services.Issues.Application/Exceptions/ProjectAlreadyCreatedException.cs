@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Issues.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Issues.Application.Exceptions;
 
@@ -10,6 +10,5 @@ public class ProjectAlreadyCreatedException : AppException
         ProjectId = projectId;
     }
 
-    public override string Code { get; } = "project_already_created";
     public string ProjectId { get; }
 }

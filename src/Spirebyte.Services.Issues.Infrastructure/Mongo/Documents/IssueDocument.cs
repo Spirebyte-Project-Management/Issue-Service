@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.Types;
+using Spirebyte.Framework.Shared.Types;
 using Spirebyte.Services.Issues.Core.Enums;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 
-internal sealed class IssueDocument : IIdentifiable<string>
+public sealed class IssueDocument : IIdentifiable<string>
 {
     public IssueType Type { get; set; }
     public IssueStatus Status { get; set; }

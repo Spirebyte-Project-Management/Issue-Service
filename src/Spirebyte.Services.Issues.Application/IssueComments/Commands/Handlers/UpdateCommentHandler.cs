@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using Microsoft.Extensions.Logging;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Application.IssueComments.Events;
-using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Repositories;
 
@@ -35,6 +35,6 @@ internal sealed class UpdateCommentHandler : ICommandHandler<UpdateComment>
         await _commentRepository.UpdateAsync(comment);
 
         _logger.LogInformation($"Updated comment with id: {comment.Id}.");
-        await _messageBroker.PublishAsync(new CommentUpdated(comment.Id));
+        await _messageBroker.SendAsync(new CommentUpdated(comment.Id), cancellationToken);
     }
 }

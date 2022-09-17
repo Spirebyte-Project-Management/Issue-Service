@@ -1,8 +1,8 @@
-﻿using Convey.Types;
+﻿using Spirebyte.Framework.Shared.Types;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 
-internal sealed class ProjectDocument : IIdentifiable<string>
+public sealed class ProjectDocument : IIdentifiable<string>
 {
     public string Id { get; set; }
 }

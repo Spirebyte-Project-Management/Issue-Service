@@ -1,106 +1,118 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Spirebyte.Services.Issues.API;
+using NSubstitute;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.Shared.Handlers;
+using Spirebyte.Framework.Tests.Shared.Fixtures;
+using Spirebyte.Framework.Tests.Shared.Infrastructure;
+using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Application.Issues.Commands;
+using Spirebyte.Services.Issues.Application.Issues.Commands.Handlers;
+using Spirebyte.Services.Issues.Application.Issues.Events;
 using Spirebyte.Services.Issues.Application.Issues.Exceptions;
+using Spirebyte.Services.Issues.Application.Issues.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Entities;
-using Spirebyte.Services.Issues.Core.Enums;
+using Spirebyte.Services.Issues.Core.Repositories;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
-using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
-using Spirebyte.Services.Issues.Tests.Shared.Factories;
-using Spirebyte.Services.Issues.Tests.Shared.Fixtures;
+using Spirebyte.Services.Issues.Infrastructure.Mongo.Repositories;
+using Spirebyte.Services.Issues.Tests.Shared.MockData.Entities;
 using Xunit;
 
 namespace Spirebyte.Services.Issues.Tests.Integration.Commands;
 
-[Collection("Spirebyte collection")]
-public class CreateIssuesTests : IDisposable
+public class CreateIssuesTests : TestBase
 {
-    private const string Exchange = "issues";
+    private readonly TestMessageBroker _messageBroker;
+
     private readonly ICommandHandler<CreateIssue> _commandHandler;
-    private readonly MongoDbFixture<IssueDocument, string> _issuesMongoDbFixture;
-    private readonly MongoDbFixture<ProjectDocument, string> _projectsMongoDbFixture;
-    private readonly RabbitMqFixture _rabbitMqFixture;
-    private readonly MongoDbFixture<UserDocument, Guid> _usersMongoDbFixture;
 
-    public CreateIssuesTests(SpirebyteApplicationFactory<Program> factory)
+    private readonly IProjectRepository _projectRepository;
+    private readonly IIssueRepository _issueRepository;
+    private readonly IHistoryService _historyService;
+    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
+    private readonly IContextAccessor _contextAccessor;
+    private readonly IIssueRequestStorage _issueRequestStorage;
+
+    public CreateIssuesTests(
+        MongoDbFixture<CommentDocument, string> commentsMongoDbFixture,
+        MongoDbFixture<HistoryDocument, Guid> historyMongoDbFixture,
+        MongoDbFixture<IssueDocument, string> issuesMongoDbFixture,
+        MongoDbFixture<ProjectDocument, string> projectsMongoDbFixture,
+        MongoDbFixture<UserDocument, Guid> usersMongoDbFixture) : base(commentsMongoDbFixture, historyMongoDbFixture, issuesMongoDbFixture, projectsMongoDbFixture, usersMongoDbFixture)
     {
-        _rabbitMqFixture = new RabbitMqFixture();
-        _issuesMongoDbFixture = new MongoDbFixture<IssueDocument, string>("issues");
-        _projectsMongoDbFixture = new MongoDbFixture<ProjectDocument, string>("projects");
-        _usersMongoDbFixture = new MongoDbFixture<UserDocument, Guid>("users");
-        factory.Server.AllowSynchronousIO = true;
-        _commandHandler = factory.Services.GetRequiredService<ICommandHandler<CreateIssue>>();
-    }
+        _messageBroker = new TestMessageBroker();
 
-    public void Dispose()
-    {
-        _issuesMongoDbFixture.Dispose();
-        _projectsMongoDbFixture.Dispose();
-        _usersMongoDbFixture.Dispose();
-    }
+        _projectRepository = new ProjectRepository(ProjectsMongoDbFixture);
+        _issueRepository = new IssueRepository(IssuesMongoDbFixture);
 
+        _historyService = Substitute.For<IHistoryService>();
+        _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
+        _contextAccessor = Substitute.For<IContextAccessor>();
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", Guid.NewGuid().ToString()));
+        _issueRequestStorage = Substitute.For<IIssueRequestStorage>();
+        
+        _commandHandler = new CreateIssueHandler(_projectRepository, _issueRepository, _messageBroker, _historyService, _projectsApiHttpClient, _contextAccessor, _issueRequestStorage);
+    }
 
     [Fact]
     public async Task create_issue_command_should_add_issue_with_given_data_to_database()
     {
-        var projectId = "projectkey";
-        var epicId = string.Empty;
-        var title = "Title";
-        var description = "description";
-        var type = IssueType.Story;
-        var status = IssueStatus.TODO;
-        var storypoints = 0;
+        var fakedIssue = IssueFaker.Instance.Generate();
 
-        var expectedIssueId = $"{projectId}-1";
+        await _projectRepository.AddAsync(new Project(fakedIssue.ProjectId));
 
-        var project = new Project(projectId);
-        await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
+        _projectsApiHttpClient.HasPermission(default, default, default).ReturnsForAnyArgs(true);
 
+        var command = new CreateIssue(fakedIssue.Type, fakedIssue.Status, fakedIssue.Title, fakedIssue.Description,
+            fakedIssue.StoryPoints, fakedIssue.ProjectId, fakedIssue.EpicId, fakedIssue.Assignees,
+            fakedIssue.LinkedIssues, DateTime.Now);
 
-        var command = new CreateIssue(type, status, title, description, storypoints, projectId, epicId, null,
-            null, DateTime.Now);
+        var currentIssues = await IssuesMongoDbFixture.FindAsync(r => r.ProjectId == fakedIssue.ProjectId);
 
+        _issueRequestStorage.SetIssue(
+            Arg.Do<Guid>(r => { r.Should().Be(command.ReferenceId); }),
+            Arg.Do<Issue>(issue =>
+            {
+                issue.Should().NotBeNull();
+                issue.Id.Should().Be($"{fakedIssue.ProjectId}-{currentIssues.Count + 1}");
+                issue.Type.Should().Be(fakedIssue.Type);
+                issue.Status.Should().Be(fakedIssue.Status);
+                issue.Title.Should().Be(fakedIssue.Title);
+                issue.Description.Should().Be(fakedIssue.Description);
+                issue.StoryPoints.Should().Be(fakedIssue.StoryPoints);
+                issue.ProjectId.Should().Be(fakedIssue.ProjectId);
+                issue.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMinutes(1));
+            })
+        );
+        
         // Check if exception is thrown
-
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().NotThrowAsync();
 
+        _messageBroker.Events.Should().NotBeEmpty();
+        _messageBroker.Events.Count.Should().Be(1);
+        var @event = _messageBroker.Events[0];
+        @event.Should().BeOfType<IssueCreated>();
 
-        var issue = await _issuesMongoDbFixture.GetAsync(expectedIssueId);
-
-        issue.Should().NotBeNull();
-        issue.Id.Should().Be(expectedIssueId);
-        issue.Type.Should().Be(type);
-        issue.Status.Should().Be(status);
-        issue.Title.Should().Be(title);
-        issue.Description.Should().Be(description);
-        issue.StoryPoints.Should().Be(storypoints);
-        issue.ProjectId.Should().Be(projectId);
+        var issues = await IssuesMongoDbFixture.FindAsync(r => r.Title == fakedIssue.Title);
+        issues.Should().NotBeEmpty();
     }
 
     [Fact]
     public async Task create_issue_command_fails_when_project_does_not_exist()
     {
-        var projectId = "projectKey";
-        var epicId = "epicKey";
-        var issueId = "issueKey";
-        var title = "Title";
-        var description = "description";
-        var type = IssueType.Story;
-        var status = IssueStatus.TODO;
-        var storypoints = 0;
+        var fakedIssue = IssueFaker.Instance.Generate();
+        
+        _projectsApiHttpClient.HasPermission(default, default, default).ReturnsForAnyArgs(true);
 
-        var command = new CreateIssue(type, status, title, description, storypoints, projectId, epicId, null,
-            null, DateTime.Now);
+        var command = new CreateIssue(fakedIssue.Type, fakedIssue.Status, fakedIssue.Title, fakedIssue.Description,
+            fakedIssue.StoryPoints, fakedIssue.ProjectId, fakedIssue.EpicId, fakedIssue.Assignees,
+            fakedIssue.LinkedIssues, DateTime.Now);
 
         // Check if exception is thrown
-
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().ThrowAsync<ProjectNotFoundException>();
@@ -109,24 +121,17 @@ public class CreateIssuesTests : IDisposable
     [Fact]
     public async Task create_issue_command_fails_when_epic_does_not_exist()
     {
-        var projectId = "projectKey";
-        var epicId = "epicKey";
-        var issueId = "issueKey";
-        var title = "Title";
-        var description = "description";
-        var type = IssueType.Story;
-        var status = IssueStatus.TODO;
-        var storypoints = 0;
+        var fakedIssue = IssueFaker.Instance.Generate();
+        
+        await _projectRepository.AddAsync(new Project(fakedIssue.ProjectId));
+        
+        _projectsApiHttpClient.HasPermission(default, default, default).ReturnsForAnyArgs(true);
 
-        var project = new Project(projectId);
-        await _projectsMongoDbFixture.InsertAsync(project.AsDocument());
-
-
-        var command = new CreateIssue(type, status, title, description, storypoints, projectId, epicId, null,
-            null, DateTime.Now);
+        var command = new CreateIssue(fakedIssue.Type, fakedIssue.Status, fakedIssue.Title, fakedIssue.Description,
+            fakedIssue.StoryPoints, fakedIssue.ProjectId, fakedIssue.Id, fakedIssue.Assignees,
+            fakedIssue.LinkedIssues, DateTime.Now);
 
         // Check if exception is thrown
-
         await _commandHandler
             .Awaiting(c => c.HandleAsync(command))
             .Should().ThrowAsync<EpicNotFoundException>();

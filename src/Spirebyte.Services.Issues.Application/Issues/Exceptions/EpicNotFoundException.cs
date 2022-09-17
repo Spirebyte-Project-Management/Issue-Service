@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Issues.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Exceptions;
 
@@ -8,7 +8,5 @@ public class EpicNotFoundException : AppException
     {
         EpicId = epicId;
     }
-
-    public override string Code { get; } = "epic_not_found";
     public string EpicId { get; }
 }

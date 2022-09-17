@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Events;
 
-[Contract]
+[Message("issues", "issue_created")]
 public class IssueCreated : IEvent
 {
     public IssueCreated(string id, IssueType type, IssueStatus status, string title, string description,

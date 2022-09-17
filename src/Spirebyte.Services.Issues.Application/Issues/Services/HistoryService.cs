@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Spirebyte.Framework.Contexts;
 using Spirebyte.Services.Issues.Application.Issues.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Attributes;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Exceptions;
 using Spirebyte.Services.Issues.Core.Repositories;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Services;
 
 internal sealed class HistoryService : IHistoryService
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IHistoryRepository _historyRepository;
 
-    public HistoryService(IHistoryRepository historyRepository, IAppContext appContext)
+    public HistoryService(IHistoryRepository historyRepository, IContextAccessor contextAccessor)
     {
         _historyRepository = historyRepository;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
     }
 
     public async Task SaveHistory(Issue? oldIssue, Issue newIssue, HistoryTypes action)
@@ -79,7 +79,7 @@ internal sealed class HistoryService : IHistoryService
         }
 
         var dateChanged = DateTime.Now;
-        var userId = _appContext.Identity.Id;
+        var userId = _contextAccessor.Context.GetUserId();
 
         if (changedFields.Count == 0) return;
 

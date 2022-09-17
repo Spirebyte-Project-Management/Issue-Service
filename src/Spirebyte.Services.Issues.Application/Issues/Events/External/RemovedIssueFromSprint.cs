@@ -1,9 +1,9 @@
-﻿using Convey.CQRS.Events;
-using Convey.MessageBrokers;
+﻿using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Events.External;
 
-[Message("sprints")]
+[Message("sprints", "removed_issue_from_sprint", "issues.removed_issue_from_sprint")]
 public class RemovedIssueFromSprint : IEvent
 {
     public RemovedIssueFromSprint(string sprintId, string issueId)

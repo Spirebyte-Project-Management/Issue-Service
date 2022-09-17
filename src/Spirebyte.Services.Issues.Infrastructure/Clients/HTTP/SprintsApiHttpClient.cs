@@ -1,22 +1,28 @@
-﻿using System.Threading.Tasks;
-using Convey.HTTP;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Spirebyte.Framework.HTTP;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Clients.HTTP;
 
 internal sealed class SprintsApiHttpClient : ISprintsApiHttpClient
 {
-    private readonly IHttpClient _client;
+    private readonly string _clientName;
+    private readonly IHttpClientFactory _factory;
     private readonly string _url;
 
-    public SprintsApiHttpClient(IHttpClient client, HttpClientOptions options)
+    public SprintsApiHttpClient(IHttpClientFactory factory, IOptions<HttpClientOptions> options)
     {
-        _client = client;
-        _url = options.Services["sprints"];
+        _factory = factory;
+        _clientName = options.Value.Name;
+        _url = options.Value.Services["sprints"];
     }
-
+    
     public Task<string[]> IssuesWithoutSprintForProject(string projectId)
     {
-        return _client.GetAsync<string[]>($"{_url}/issuesWithoutSprintForProject/{projectId}");
+        return _factory.CreateClient(_clientName)
+            .GetFromJsonAsync<string[]>($"{_url}/issuesWithoutSprintForProject/{projectId}");
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Convey.WebApi;
-using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Issues.API.Controllers.Base;
 using Spirebyte.Services.Issues.Application.IssueComments.Commands;
 using Spirebyte.Services.Issues.Application.IssueComments.DTO;
@@ -57,7 +56,8 @@ public class IssuesCommentsController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CreateComment(string issueId, CreateComment command)
     {
-        await _dispatcher.SendAsync(command.Bind(x => x.IssueId, issueId));
+        command.IssueId = issueId;
+        await _dispatcher.SendAsync(command);
         var comment = _issueCommentsRequestStorage.GetComment(command.ReferenceId);
         return Created($"issues/{issueId}/comments/{comment.Id}", comment);
     }

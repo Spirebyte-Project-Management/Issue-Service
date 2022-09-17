@@ -39,28 +39,28 @@ public class Issue
         CreatedAt = createdAt == DateTime.MinValue ? DateTime.Now : createdAt;
     }
 
-    public string Id { get; }
+    public string Id { get; set; }
 
-    [HistoryFieldType(FieldTypes.Type)] public IssueType Type { get; }
+    [HistoryFieldType(FieldTypes.Type)] public IssueType Type { get; set;}
 
-    [HistoryFieldType(FieldTypes.Status)] public IssueStatus Status { get; }
+    [HistoryFieldType(FieldTypes.Status)] public IssueStatus Status { get; set; }
 
-    public string Title { get; }
-    public string Description { get; }
-    public int StoryPoints { get; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public int StoryPoints { get; set; }
 
-    [IgnoreHistory] public string ProjectId { get; }
+    [IgnoreHistory] public string ProjectId { get; set; }
 
-    [HistoryFieldType(FieldTypes.Epic)] public string EpicId { get; }
+    [HistoryFieldType(FieldTypes.Epic)] public string EpicId { get; set; }
 
     [HistoryFieldType(FieldTypes.Sprint)] public string SprintId { get; private set; }
 
     [HistoryFieldType(FieldTypes.Assignees)]
-    public IEnumerable<Guid> Assignees { get; }
+    public IEnumerable<Guid> Assignees { get; set; }
 
-    [IgnoreHistory] public IEnumerable<Guid> LinkedIssues { get; }
+    [IgnoreHistory] public IEnumerable<Guid> LinkedIssues { get; set; }
 
-    [IgnoreHistory] public DateTime CreatedAt { get; }
+    [IgnoreHistory] public DateTime CreatedAt { get; set; }
 
 
     public void AddToSprint(string sprintId)

@@ -1,4 +1,4 @@
-﻿using Convey.CQRS.Queries;
+﻿using Spirebyte.Framework.Shared.Abstractions;
 using Spirebyte.Services.Issues.Application.IssueComments.DTO;
 
 namespace Spirebyte.Services.Issues.Application.IssueComments.Queries;

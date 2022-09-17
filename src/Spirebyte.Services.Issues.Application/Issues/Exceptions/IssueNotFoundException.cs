@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Issues.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Exceptions;
 
@@ -8,7 +8,5 @@ public class IssueNotFoundException : AppException
     {
         IssueId = issueId;
     }
-
-    public override string Code { get; } = "issue_not_found";
     public string IssueId { get; }
 }

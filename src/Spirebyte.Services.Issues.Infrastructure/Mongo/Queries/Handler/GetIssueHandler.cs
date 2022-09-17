@@ -1,31 +1,25 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Queries;
-using Convey.Persistence.MongoDB;
+using Spirebyte.Framework.DAL.MongoDb.Interfaces;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.Issues.DTO;
 using Spirebyte.Services.Issues.Application.Issues.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler;
 
 internal sealed class GetIssueHandler : IQueryHandler<GetIssue, IssueDto>
 {
-    private readonly IAppContext _appContext;
     private readonly IMongoRepository<IssueDocument, string> _issueRepository;
     private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
-    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
 
     public GetIssueHandler(IMongoRepository<IssueDocument, string> issueRepository,
-        IMongoRepository<ProjectDocument, string> projectRepository, IAppContext appContext,
-        IProjectsApiHttpClient projectsApiHttpClient)
+        IMongoRepository<ProjectDocument, string> projectRepository)
     {
         _issueRepository = issueRepository;
         _projectRepository = projectRepository;
-        _appContext = appContext;
-        _projectsApiHttpClient = projectsApiHttpClient;
     }
 
     public async Task<IssueDto> HandleAsync(GetIssue query, CancellationToken cancellationToken = default)

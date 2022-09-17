@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.Types;
+using Spirebyte.Framework.Shared.Types;
 using Spirebyte.Services.Issues.Core.Entities;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
 
-internal sealed class CommentDocument : IIdentifiable<string>
+public sealed class CommentDocument : IIdentifiable<string>
 {
     public string IssueId { get; set; }
     public string ProjectId { get; set; }

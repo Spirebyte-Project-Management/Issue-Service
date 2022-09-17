@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Convey.CQRS.Queries;
+using Spirebyte.Framework.Shared.Abstractions;
 using Spirebyte.Services.Issues.Application.Issues.DTO;
 using Spirebyte.Services.Issues.Core.Enums;
 

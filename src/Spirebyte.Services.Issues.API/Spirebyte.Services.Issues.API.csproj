@@ -8,20 +8,24 @@
         <DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
         <LangVersion>latestmajor</LangVersion>
     </PropertyGroup>
-
+    
     <ItemGroup>
-        <PackageReference Include="Convey" Version="1.0.531"/>
-        <PackageReference Include="Convey.Logging" Version="1.0.531"/>
-        <PackageReference Include="Convey.WebApi" Version="1.0.531"/>
-        <PackageReference Include="Convey.WebApi.CQRS" Version="1.0.531"/>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0"/>
+        <ProjectReference Include="..\Spirebyte.Services.Issues.Infrastructure\Spirebyte.Services.Issues.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Spirebyte.Services.Issues.Infrastructure\Spirebyte.Services.Issues.Infrastructure.csproj"/>
+        <Content Include="Certs\**" CopyToOutputDirectory="Always" />
+        <Content Include="docker-compose.integration.yml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <None Remove="Dockerfile"/>
+        <Content Include="Dockerfile">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
-
+    
 </Project>

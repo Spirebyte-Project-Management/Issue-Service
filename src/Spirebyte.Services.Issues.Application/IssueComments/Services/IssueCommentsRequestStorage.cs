@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
+using Spirebyte.Framework.Contexts;
 using Spirebyte.Services.Issues.Application.IssueComments.DTO;
 using Spirebyte.Services.Issues.Application.IssueComments.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Entities;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Application.IssueComments.Services;
 
 public class IssueCommentsRequestStorage : IIssueCommentsRequestStorage
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IMemoryCache _cache;
 
-    public IssueCommentsRequestStorage(IMemoryCache cache, IAppContext appContext)
+    public IssueCommentsRequestStorage(IMemoryCache cache, IContextAccessor contextAccessor)
     {
         _cache = cache;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
     }
 
     public void SetComment(Guid referenceId, Comment comment)
@@ -31,8 +31,8 @@ public class IssueCommentsRequestStorage : IIssueCommentsRequestStorage
             Reactions = comment.Reactions ?? Enumerable.Empty<Reaction>(),
             CreatedAt = comment.CreatedAt,
             UpdatedAt = comment.UpdatedAt,
-            CanEdit = comment.AuthorId == _appContext.Identity.Id,
-            CanDelete = comment.AuthorId == _appContext.Identity.Id
+            CanEdit = comment.AuthorId == _contextAccessor.Context.GetUserId(),
+            CanDelete = comment.AuthorId == _contextAccessor.Context.GetUserId()
         };
 
         _cache.Set(GetKey(referenceId), commentDto, TimeSpan.FromSeconds(5));

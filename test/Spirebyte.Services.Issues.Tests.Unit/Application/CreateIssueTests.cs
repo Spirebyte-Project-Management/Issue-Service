@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using NSubstitute;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.Issues.Commands;
 using Spirebyte.Services.Issues.Application.Issues.Commands.Handlers;
 using Spirebyte.Services.Issues.Application.Issues.Services.Interfaces;
-using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Repositories;
-using Spirebyte.Shared.Contexts.Interfaces;
 using Xunit;
 
 namespace Spirebyte.Services.Issues.Tests.Unit.Application;
 
 public class CreateIssueTests
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly ICommandHandler<CreateIssue> _handler;
     private readonly IHistoryService _historyService;
     private readonly IIssueRepository _issueRepository;
@@ -33,11 +33,12 @@ public class CreateIssueTests
         _messageBroker = Substitute.For<IMessageBroker>();
         _historyService = Substitute.For<IHistoryService>();
         _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
-        _appContext = Substitute.For<IAppContext>();
+        _contextAccessor = Substitute.For<IContextAccessor>();
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", Guid.NewGuid().ToString()));
         _issueRequestStorage = Substitute.For<IIssueRequestStorage>();
 
         _handler = new CreateIssueHandler(_projectRepository, _issueRepository, _messageBroker, _historyService,
-            _projectsApiHttpClient, _appContext, _issueRequestStorage);
+            _projectsApiHttpClient, _contextAccessor, _issueRequestStorage);
     }
 
     private Task Act(CreateIssue command)

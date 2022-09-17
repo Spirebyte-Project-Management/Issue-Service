@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Spirebyte.Services.Issues.Application.IssueComments.DTO;
 using Spirebyte.Services.Issues.Core.Entities;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 
@@ -28,7 +28,7 @@ internal static class CommentMappers
         };
     }
 
-    public static CommentDto AsDto(this CommentDocument document, IIdentityContext identityContext)
+    public static CommentDto AsDto(this CommentDocument document, Guid userId)
     {
         return new CommentDto
         {
@@ -40,8 +40,8 @@ internal static class CommentMappers
             Reactions = document.Reactions ?? Enumerable.Empty<Reaction>(),
             CreatedAt = document.CreatedAt,
             UpdatedAt = document.UpdatedAt,
-            CanEdit = document.AuthorId == identityContext.Id,
-            CanDelete = document.AuthorId == identityContext.Id
+            CanEdit = document.AuthorId == userId,
+            CanDelete = document.AuthorId == userId
         };
     }
 }

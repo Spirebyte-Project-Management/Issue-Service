@@ -1,24 +1,23 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.Exceptions;
 using Spirebyte.Services.Issues.Application.Issues.Events;
 using Spirebyte.Services.Issues.Application.Issues.Exceptions;
 using Spirebyte.Services.Issues.Application.Issues.Services.Interfaces;
-using Spirebyte.Services.Issues.Application.Services.Interfaces;
 using Spirebyte.Services.Issues.Core.Constants;
 using Spirebyte.Services.Issues.Core.Entities;
 using Spirebyte.Services.Issues.Core.Enums;
 using Spirebyte.Services.Issues.Core.Repositories;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Commands.Handlers;
 
-// Simple wrapper
 internal sealed class CreateIssueHandler : ICommandHandler<CreateIssue>
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IHistoryService _historyService;
     private readonly IIssueRepository _issueRepository;
     private readonly IIssueRequestStorage _issueRequestStorage;
@@ -28,14 +27,14 @@ internal sealed class CreateIssueHandler : ICommandHandler<CreateIssue>
 
     public CreateIssueHandler(IProjectRepository projectRepository, IIssueRepository issueRepository,
         IMessageBroker messageBroker, IHistoryService historyService, IProjectsApiHttpClient projectsApiHttpClient,
-        IAppContext appContext, IIssueRequestStorage issueRequestStorage)
+        IContextAccessor contextAccessor, IIssueRequestStorage issueRequestStorage)
     {
         _projectRepository = projectRepository;
         _issueRepository = issueRepository;
         _messageBroker = messageBroker;
         _historyService = historyService;
         _projectsApiHttpClient = projectsApiHttpClient;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
         _issueRequestStorage = issueRequestStorage;
     }
 
@@ -47,7 +46,7 @@ internal sealed class CreateIssueHandler : ICommandHandler<CreateIssue>
         if (!string.IsNullOrEmpty(command.EpicId) && !await _issueRepository.ExistsAsync(command.EpicId))
             throw new EpicNotFoundException(command.EpicId);
 
-        if (!await _projectsApiHttpClient.HasPermission(IssuePermissionKeys.CreateIssues, _appContext.Identity.Id,
+        if (!await _projectsApiHttpClient.HasPermission(IssuePermissionKeys.CreateIssues, _contextAccessor.Context.GetUserId(),
                 command.ProjectId)) throw new ActionNotAllowedException();
 
         var issueCount = await _issueRepository.GetIssueCountOfProject(command.ProjectId);
@@ -58,7 +57,7 @@ internal sealed class CreateIssueHandler : ICommandHandler<CreateIssue>
             command.StoryPoints, command.ProjectId, command.EpicId, null, command.Assignees, command.LinkedIssues,
             command.CreatedAt);
         await _issueRepository.AddAsync(issue);
-        await _messageBroker.PublishAsync(new IssueCreated(issue));
+        await _messageBroker.SendAsync(new IssueCreated(issue), cancellationToken);
 
         await _historyService.SaveHistory(Issue.Empty, issue, HistoryTypes.Created);
 
