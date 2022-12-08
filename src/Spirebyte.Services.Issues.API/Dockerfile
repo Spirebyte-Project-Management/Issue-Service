@@ -24,4 +24,6 @@ RUN dotnet publish "Spirebyte.Services.Issues.API.csproj" -c Release -o /app/pub
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+ENV ASPNETCORE_ENVIRONMENT Docker
+ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED true
 ENTRYPOINT ["dotnet", "Spirebyte.Services.Issues.API.dll"]
