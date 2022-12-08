@@ -29,8 +29,6 @@ public class IssuesCommentsController : ApiController
     [Authorize(ApiScopes.IssueCommentsRead)]
     [SwaggerOperation("Browse issue comments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<CommentDto>> BrowseAsync(string issueId)
     {
         return Ok(await _dispatcher.QueryAsync(new GetComments(null, issueId)));
@@ -41,8 +39,6 @@ public class IssuesCommentsController : ApiController
     [SwaggerOperation("Get issue comment")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<CommentDto?>> GetAsync(string issueId, string commentId)
     {
         return await _dispatcher.QueryAsync(new GetComment(commentId));

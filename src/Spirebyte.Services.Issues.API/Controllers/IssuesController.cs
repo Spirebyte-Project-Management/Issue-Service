@@ -29,8 +29,6 @@ public class IssuesController : ApiController
     [Authorize(ApiScopes.IssuesRead)]
     [SwaggerOperation("Browse issues")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<IssueDto>> BrowseAsync([FromQuery] GetIssues query)
     {
         return Ok(await _dispatcher.QueryAsync(query));
@@ -41,8 +39,6 @@ public class IssuesController : ApiController
     [SwaggerOperation("Get issue")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<IssueDto?>> GetAsync(string issueId)
     {
         return await _dispatcher.QueryAsync(new GetIssue(issueId));
