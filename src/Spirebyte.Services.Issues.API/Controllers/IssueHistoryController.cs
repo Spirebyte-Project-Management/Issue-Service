@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.API;
 using Spirebyte.Framework.Shared.Handlers;
-using Spirebyte.Services.Issues.API.Controllers.Base;
 using Spirebyte.Services.Issues.Application.Issues.DTO;
 using Spirebyte.Services.Issues.Application.Issues.Queries;
 using Spirebyte.Services.Issues.Core.Constants;
@@ -13,7 +13,7 @@ namespace Spirebyte.Services.Issues.API.Controllers;
 
 [Authorize]
 [Route("issues/{issueId}/history")]
-public class IssuesHistoryController : BaseController
+public class IssuesHistoryController : ApiController
 {
     private readonly IDispatcher _dispatcher;
 
@@ -23,7 +23,7 @@ public class IssuesHistoryController : BaseController
     }
 
     [HttpGet]
-    [Authorize(ApiScopes.Read)]
+    [Authorize(ApiScopes.IssueHistoryRead)]
     [SwaggerOperation("Browse issue history")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

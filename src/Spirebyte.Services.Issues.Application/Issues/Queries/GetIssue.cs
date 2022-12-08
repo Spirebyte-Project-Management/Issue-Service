@@ -3,7 +3,7 @@ using Spirebyte.Services.Issues.Application.Issues.DTO;
 
 namespace Spirebyte.Services.Issues.Application.Issues.Queries;
 
-public class GetIssue : IQuery<IssueDto>
+public class GetIssue : IQuery<IssueDto?>
 {
     public GetIssue(string id)
     {

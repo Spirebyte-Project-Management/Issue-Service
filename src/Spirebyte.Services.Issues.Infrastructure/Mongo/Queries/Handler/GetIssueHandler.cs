@@ -10,7 +10,7 @@ using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler;
 
-internal sealed class GetIssueHandler : IQueryHandler<GetIssue, IssueDto>
+internal sealed class GetIssueHandler : IQueryHandler<GetIssue, IssueDto?>
 {
     private readonly IMongoRepository<IssueDocument, string> _issueRepository;
     private readonly IMongoRepository<ProjectDocument, string> _projectRepository;
@@ -22,7 +22,7 @@ internal sealed class GetIssueHandler : IQueryHandler<GetIssue, IssueDto>
         _projectRepository = projectRepository;
     }
 
-    public async Task<IssueDto> HandleAsync(GetIssue query, CancellationToken cancellationToken = default)
+    public async Task<IssueDto?> HandleAsync(GetIssue query, CancellationToken cancellationToken = default)
     {
         var issue = await _issueRepository.GetAsync(p => p.Id == query.Id);
         if (issue == null) return null;

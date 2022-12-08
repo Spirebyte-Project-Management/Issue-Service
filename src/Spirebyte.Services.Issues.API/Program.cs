@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Framework;
+using Spirebyte.Framework.Auth;
 using Spirebyte.Services.Issues.Application;
 using Spirebyte.Services.Issues.Core.Constants;
 using Spirebyte.Services.Issues.Infrastructure;
-using Spirebyte.Shared.IdentityServer;
 
 namespace Spirebyte.Services.Issues.API;
 
@@ -30,9 +30,13 @@ public class Program
                 .AddInfrastructure(ctx.Configuration)
                 .Configure<AuthorizationOptions>(options =>
                 {
-                    options.AddEitherOrScopePolicy(ApiScopes.Read, "issues.read", "issues.manage");
-                    options.AddEitherOrScopePolicy(ApiScopes.Write, "issues.write", "issues.manage");
-                    options.AddEitherOrScopePolicy(ApiScopes.Delete, "issues.delete", "issues.manage");
+                    options.AddEitherOrScopePolicy(ApiScopes.IssuesRead, ApiScopes.IssuesRead, ApiScopes.IssuesManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.IssuesWrite, ApiScopes.IssuesWrite, ApiScopes.IssuesManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.IssuesDelete, ApiScopes.IssuesDelete, ApiScopes.IssuesManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.IssueCommentsRead, ApiScopes.IssueCommentsRead, ApiScopes.IssuesManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.IssueCommentsWrite, ApiScopes.IssueCommentsWrite, ApiScopes.IssuesManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.IssueCommentsDelete, ApiScopes.IssueCommentsDelete, ApiScopes.IssuesManage);
+                    options.AddEitherOrScopePolicy(ApiScopes.IssueHistoryRead, ApiScopes.IssueHistoryRead, ApiScopes.IssuesManage);
                 })
                 .AddControllers()
             )

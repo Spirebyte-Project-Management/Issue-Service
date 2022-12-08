@@ -11,7 +11,7 @@ using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents.Mappers;
 
 namespace Spirebyte.Services.Issues.Infrastructure.Mongo.Queries.Handler;
 
-internal sealed class GetCommentHandler : IQueryHandler<GetComment, CommentDto>
+internal sealed class GetCommentHandler : IQueryHandler<GetComment, CommentDto?>
 {
     private readonly IMongoRepository<CommentDocument, string> _commentRepository;
     private readonly IContextAccessor _contextAccessor;
@@ -31,7 +31,7 @@ internal sealed class GetCommentHandler : IQueryHandler<GetComment, CommentDto>
         _projectsApiHttpClient = projectsApiHttpClient;
     }
 
-    public async Task<CommentDto> HandleAsync(GetComment query, CancellationToken cancellationToken = default)
+    public async Task<CommentDto?> HandleAsync(GetComment query, CancellationToken cancellationToken = default)
     {
         var comment = await _commentRepository.GetAsync(query.Id);
         if (comment == null) return null;

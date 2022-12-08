@@ -7,6 +7,7 @@
         <DockerfileContext>..\..\..\..</DockerfileContext>
         <DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
         <LangVersion>latestmajor</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     
     <ItemGroup>
@@ -22,7 +23,7 @@
         <Content Include="docker-compose.integration.yml">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <None Remove="Dockerfile"/>
+        <None Remove="Dockerfile" />
         <Content Include="Dockerfile">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
