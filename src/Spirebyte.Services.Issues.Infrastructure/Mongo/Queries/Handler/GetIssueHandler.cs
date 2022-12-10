@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Spirebyte.Framework.DAL.MongoDb.Interfaces;
 using Spirebyte.Framework.Shared.Handlers;
-using Spirebyte.Services.Issues.Application.Clients.Interfaces;
 using Spirebyte.Services.Issues.Application.Issues.DTO;
 using Spirebyte.Services.Issues.Application.Issues.Queries;
 using Spirebyte.Services.Issues.Infrastructure.Mongo.Documents;
