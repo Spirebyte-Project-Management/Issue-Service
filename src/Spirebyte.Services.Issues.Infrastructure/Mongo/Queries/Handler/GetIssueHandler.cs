@@ -23,10 +23,10 @@ internal sealed class GetIssueHandler : IQueryHandler<GetIssue, IssueDto?>
 
     public async Task<IssueDto?> HandleAsync(GetIssue query, CancellationToken cancellationToken = default)
     {
-        var issue = await _issueRepository.GetAsync(p => p.Id == query.Id);
+        var issue = await _issueRepository.GetAsync(p => p.Id == query.Id, cancellationToken);
         if (issue == null) return null;
 
-        var project = await _projectRepository.GetAsync(issue.ProjectId);
+        var project = await _projectRepository.GetAsync(issue.ProjectId, cancellationToken);
         if (project == null) return null;
 
         return issue.AsDto();

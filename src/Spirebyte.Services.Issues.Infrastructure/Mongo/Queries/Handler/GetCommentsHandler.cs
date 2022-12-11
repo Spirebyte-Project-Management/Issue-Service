@@ -43,10 +43,10 @@ internal sealed class GetCommentsHandler : IQueryHandler<GetComments, IEnumerabl
         if (query.ProjectId == null && query.IssueId == null)
             return Enumerable.Empty<CommentDto>();
 
-        var issue = await _issueRepository.GetAsync(query.IssueId);
+        var issue = await _issueRepository.GetAsync(query.IssueId, cancellationToken);
         if (query.IssueId != null && issue == null) return Enumerable.Empty<CommentDto>();
 
-        var project = await _projectRepository.GetAsync(query.ProjectId);
+        var project = await _projectRepository.GetAsync(query.ProjectId, cancellationToken);
         if (query.ProjectId != null && project == null) return Enumerable.Empty<CommentDto>();
 
         var filter = new Func<CommentDocument, bool>(p =>

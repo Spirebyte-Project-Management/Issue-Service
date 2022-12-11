@@ -35,7 +35,7 @@ internal sealed class GetIssuesHandler : IQueryHandler<GetIssues, IEnumerable<Is
         if (query.ProjectId == null)
             return Enumerable.Empty<IssueDto>();
 
-        var project = await _projectRepository.GetAsync(query.ProjectId);
+        var project = await _projectRepository.GetAsync(query.ProjectId, cancellationToken);
         if (project == null) return Enumerable.Empty<IssueDto>();
 
         string[] sprintIssueIds = null;

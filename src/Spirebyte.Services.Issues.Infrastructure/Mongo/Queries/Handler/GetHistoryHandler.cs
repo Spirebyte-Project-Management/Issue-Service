@@ -30,7 +30,7 @@ internal sealed class GetHistoryHandler : IQueryHandler<GetHistory, IEnumerable<
     {
         var documents = _historyRepository.Collection.AsQueryable();
 
-        var issue = await _issueRepository.GetAsync(query.IssueId);
+        var issue = await _issueRepository.GetAsync(query.IssueId, cancellationToken);
         if (query.IssueId != null && issue == null) return Enumerable.Empty<HistoryDto>();
 
 

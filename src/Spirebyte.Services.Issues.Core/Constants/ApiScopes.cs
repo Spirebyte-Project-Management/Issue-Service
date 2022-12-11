@@ -2,7 +2,7 @@
 
 public static class ApiScopes
 {
-    public const string IssuesManage = "issues.read";
+    public const string IssuesManage = "issues.manage";
     public const string IssuesRead = "issues.read";
     public const string IssuesWrite = "issues.write";
     public const string IssuesDelete = "issues.delete";

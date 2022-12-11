@@ -33,13 +33,13 @@ internal sealed class GetCommentHandler : IQueryHandler<GetComment, CommentDto?>
 
     public async Task<CommentDto?> HandleAsync(GetComment query, CancellationToken cancellationToken = default)
     {
-        var comment = await _commentRepository.GetAsync(query.Id);
+        var comment = await _commentRepository.GetAsync(query.Id, cancellationToken);
         if (comment == null) return null;
 
-        var issue = await _issueRepository.GetAsync(comment.IssueId);
+        var issue = await _issueRepository.GetAsync(comment.IssueId, cancellationToken);
         if (issue == null) return null;
 
-        var project = await _projectRepository.GetAsync(issue.ProjectId);
+        var project = await _projectRepository.GetAsync(issue.ProjectId, cancellationToken);
         if (project == null) return null;
 
         return comment.AsDto(_contextAccessor.Context.GetUserId());
