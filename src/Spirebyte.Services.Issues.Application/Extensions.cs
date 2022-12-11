@@ -25,7 +25,7 @@ public static class Extensions
     public static IApplicationBuilder UseApplication(this IApplicationBuilder app)
     {
         app.Subscribe()
-            .Event<SignedUp>()
+            .Event<UserCreated>()
             .Event<ProjectCreated>()
             .Event<EndedSprint>()
             .Event<SprintDeleted>()
